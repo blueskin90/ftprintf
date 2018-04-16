@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:45:26 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/04 08:39:06 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/14 20:39:08 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ int			buff_putprefix(t_env *env, char c, int ishash)
 
 int			buff_uimaxtoahexa(t_env *env, uintmax_t value)
 {
-	int		val;
+	uintmax_t		val;
 	if (value / 16)
 		buff_uimaxtoahexa(env, value / 16);
 	val = value % 16;
 	if (val < 10)
 		buff_fillwith(env, val + '0');
 	else
-		buff_fillwith(env, val - 10 + ((*env->str == 'x') ? 'a' : 'A'));
+		buff_fillwith(env, val - 10 + ((*env->str == 'x' || *env->str == 'p') ? 'a' : 'A'));
 	return (1);
 }
 
@@ -58,14 +58,16 @@ int			buff_filloct(t_env *env, t_arg *arg)
 
 	value = get_casteduintmaxt(arg);
 	length = ft_uintmaxtlenbase(value, 8);
+	length = (value == 0 && arg->prec == 0) ? 0 : length; // nouvel ajout
 	numberofzeroes = (arg->prec > length) ? arg->prec - length : 0;
-	numberofzeroes += (!numberofzeroes && (arg->flags & 2) && value) ? 1 : 0;
+	numberofzeroes += (!numberofzeroes && (arg->flags & 2) && (value || !length)) ? 1 : 0; // suppression de & value
 	lengthtotal = length + numberofzeroes;
 	padding = (arg->width > lengthtotal) ? arg->width - lengthtotal : 0;
 	if (!(arg->flags & 32) && padding)
 		buff_padding(env, arg, padding);
 	while (--numberofzeroes >= 0)
 		buff_fillwith(env, '0');
+	if (length > 0) // nouvel ajout
 		buff_uimaxtoaoct(env, value);
 	if ((arg->flags & 32) && padding)
 		buff_padding(env, arg, padding);

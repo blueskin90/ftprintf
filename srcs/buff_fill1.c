@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/13 03:19:42 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/14 23:10:44 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,11 @@ int			buff_fills(t_env *env, t_arg *arg)
 	int		i;
 
 	i = -1;
-	if (ARG.cptr == NULL)
+	if (ARG.cptr == NULL || ARG.wcptr == NULL)
+	{
 		ARG.cptr = env->null;
+		arg->length = 0;
+	}
 	if (arg->length != 0)
 		return (buff_fillwstr(env, arg));
 	if (!(arg->flags & 32) && chartofill(arg, 0))
@@ -90,6 +93,37 @@ size_t		ft_wcharstrlen(t_env *env, t_arg *arg)
 	return (i);	
 }
 
+int			iscorrect(wchar_t *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if ((str[i] >= 0xD800 && str[i] <= 0xDFFF) || (str[i] > 0xff && MB_CUR_MAX == 1))
+			return (0);
+		i++;
+	}
+	return (i);
+}
+
+int			issmaller(wchar_t *str, int prec)
+{
+	int		i;
+	int		size;
+
+	i = 0;
+	size = 0;
+	while (str[i])
+	{
+		size += octsize(str[i]);
+		i++;
+	}
+	if (size <= prec)
+		return (1);
+	return (0);
+}
+
 int			buff_fillwstr(t_env *env, t_arg *arg)
 {
 	size_t	i;
@@ -98,23 +132,26 @@ int			buff_fillwstr(t_env *env, t_arg *arg)
 
 	if (ARG.wcptr == NULL)
 	{
+		ARG.cptr = NULL;
 		arg->length = 0;
 		return(buff_fills(env, arg));
 	}
-	i = -1;
+//	if (!iscorrect(ARG.wcptr) && !issmaller(ARG.wcptr, arg->prec))
+//		return (-1);
+	i = 0;
 	charnbr = ft_wcharstrlen(env, arg);
 	if (!(arg->flags & 32) && arg->width > 0)
 		buff_padding(env, arg, arg->width);
-	while (ARG.wcptr[++i] && arg->prec < 0 && i < charnbr)
+	while (ARG.wcptr[i] && arg->prec < 0 && i < charnbr)
 	{
 		wch = ARG.wcptr[i];
-		if (wch >= 0xD800 && wch <= 0xDFFF)
+		if ((wch >= 0xD800 && wch <= 0xDFFF) || (wch > 0xff && MB_CUR_MAX == 1)) // ajout de iscorrect
 			return (-1);
 		else if (wch <= 127 || (wch <= 0xff && MB_CUR_MAX == 1))
 			buff_fillwith(env, wch);
 		else
 			buff_putwchar(env, ARG.wcptr[i]);
-	//	printf("%d wch char du buffer = %c \n", (signed char)wch, env->buff[env->buffi - 1]);
+		i++;
 	}
 	if ((arg->flags & 32) && arg->width > 0)
 		buff_padding(env, arg, arg->width);
@@ -273,4 +310,29 @@ int			buff_filluint(t_env *env, t_arg *arg)
 	if ((arg->flags & 32) && padding)
 		buff_padding(env, arg, padding);
 	return (1);
+}
+
+int			buff_fillptr(t_env *env, t_arg *arg)
+{
+	uintmax_t	value;
+	int			length;
+	int			numberofzeroes;
+	int			lengthtotal;
+	int			padding;
+
+	(void)env;
+	value = (uintmax_t)ARG.vptr;
+	length = (value == 0 && arg->prec == 0) ? 0 : ft_uintmaxtlenbase(value, 16);
+	numberofzeroes = (length < arg->prec) ? arg->prec - length : 0;
+	lengthtotal = length + numberofzeroes + 2;
+	padding = (arg->width > lengthtotal) ? arg->width - lengthtotal : 0;
+	if (!(arg->flags & 32) && padding)
+		buff_fillwithnumber(env, ' ', padding);
+	buff_fillwithstr(env, "0x");
+	buff_fillwithnumber(env, '0', numberofzeroes);
+	if ((value == 0 && arg->prec) || value)
+		buff_uimaxtoahexa(env, value);
+	if ((arg->flags & 32) && padding)
+		buff_fillwithnumber(env, ' ', padding);
+	return (0);		
 }

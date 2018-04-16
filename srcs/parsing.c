@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 20:26:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/04 10:35:09 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/14 21:54:13 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int				parse_string(t_env *env)
 	return (1);
 }
 
-#include <stdio.h>
 int				parse_token(t_env *env)
 {
 	t_arg		arg;
@@ -92,7 +91,13 @@ int				parse_error(t_env *env, t_arg *arg)
 int				parse_preci(t_env *env, t_arg *arg) // penser au wildchar
 {
 	env->str++;
-	arg->prec = pfatoi(env);
+	if (*(env->str) == '*')
+	{
+		arg->prec = va_arg(env->arg, int);
+		env->str++;
+	}
+	else
+		arg->prec = pfatoi(env);
 	return (1);
 }
 

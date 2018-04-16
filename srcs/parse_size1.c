@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/03 23:37:58 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/14 22:06:42 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void			arg_parse(t_env *env, t_arg *arg)
 	(void)env;
 }
 
-void			get_arg(t_env *env, t_arg *arg) // gerer le cas du $
+int			get_arg(t_env *env, t_arg *arg) // gerer le cas du $
 {
 	if (env->get_arg[arg->cat][arg->length] == NULL)
-		env->get_arg[arg->cat][0](env, arg);
+		return (env->get_arg[arg->cat][0](env, arg));
 	else
-		env->get_arg[arg->cat][arg->length](env, arg);
+		return (env->get_arg[arg->cat][arg->length](env, arg));
 }
 
 int				parse_dsize(t_env *env, t_arg *arg)
@@ -160,7 +160,12 @@ int				parse_ssize(t_env *env, t_arg *arg)
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
-	buff_fills(env, arg);
+	if (buff_fills(env, arg) == -1)
+	{
+		env->buffilasttoken = 0;
+		env->printflen = 0;
+		return (-1);
+	}
 	env->str++;
 	return (0);
 }
@@ -173,7 +178,12 @@ int				parse_Ssize(t_env *env, t_arg *arg)
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
-	buff_fills(env, arg);
+	if (buff_fills(env, arg) == -1)
+	{
+		env->buffilasttoken = 0;
+		env->printflen = 0;
+		return (-1);
+	}
 	env->str++;
 	return (0);
 }
@@ -192,8 +202,11 @@ int				parse_psize(t_env *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 9;
+	arg->length = 0;
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
+	buff_fillptr(env, arg);
+	env->str++;
 	return (0);
 }
