@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/13 02:22:06 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/14 20:00:46 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ int					parse_psize(t_env *env, t_arg *arg);
 
 void				flags_cleanup(t_arg *arg); // pasur
 void				fill_buffer(t_env *env, char c, int i);
-void				get_arg(t_env *env, t_arg *arg);
+int					get_arg(t_env *env, t_arg *arg);
 void				arg_parse(t_env *env, t_arg *arg);
 
 int					buff_fillc(t_env *env, t_arg *arg);
@@ -213,6 +213,7 @@ int					buff_filluint(t_env *env, t_arg *arg);
 
 int					buff_fillchar(t_env *env, t_arg *arg);
 
+int					buff_fillptr(t_env *env, t_arg *arg);
 /*
 ** BUFFER HANDLING FUNCTIONS
 */
@@ -224,6 +225,8 @@ int					buff_fillwith(t_env *env, char c);
 int					buff_fillwithstr(t_env *env, char *str);
 int					buff_fillwithnumber(t_env *env, char c, int i);
 int					buff_padding(t_env *env, t_arg *arg, int width);
+
+int					buff_uimaxtoahexa(t_env *env, uintmax_t value);
 
 /*
 ** UTILITY
