@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:38:57 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/14 15:10:09 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/16 19:40:35 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int				buff_fillwith(t_env *env, char c)
 	env->buff[env->buffi] = c;
 	env->buffi++;
 	buff_check(env);
-//	printf("char = %c %d %c\n", c, c, env->buff[env->buffi - 1]);
 	return (1);
 }
 

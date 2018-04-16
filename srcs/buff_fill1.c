@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:25:06 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/16 19:40:37 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,11 +332,11 @@ int			buff_fillptr(t_env *env, t_arg *arg)
 		buff_uimaxtoahexa(env, value);
 	if ((arg->flags & 32) && padding)
 		buff_fillwithnumber(env, ' ', padding);
-	return (0);		
+	return (1);		
 }
 
 int			buff_fillnptr(t_env *env, t_arg *arg)
 {
 	*(ARG.iptr) = env->printflen + env->buffi;
-	return (0);
+	return (1);
 }
