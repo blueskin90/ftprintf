@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/14 23:10:44 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/16 19:25:06 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ size_t		ft_wcharstrlen(t_env *env, t_arg *arg)
 	arg->width -= charnbr; // le nombre de 0 ou espaces a mettre
 	return (i);	
 }
-
+/*
 int			iscorrect(wchar_t *str)
 {
 	int		i;
@@ -106,7 +106,7 @@ int			iscorrect(wchar_t *str)
 	}
 	return (i);
 }
-
+*/
 int			issmaller(wchar_t *str, int prec)
 {
 	int		i;
@@ -136,8 +136,6 @@ int			buff_fillwstr(t_env *env, t_arg *arg)
 		arg->length = 0;
 		return(buff_fills(env, arg));
 	}
-//	if (!iscorrect(ARG.wcptr) && !issmaller(ARG.wcptr, arg->prec))
-//		return (-1);
 	i = 0;
 	charnbr = ft_wcharstrlen(env, arg);
 	if (!(arg->flags & 32) && arg->width > 0)
@@ -145,7 +143,7 @@ int			buff_fillwstr(t_env *env, t_arg *arg)
 	while (ARG.wcptr[i] && arg->prec < 0 && i < charnbr)
 	{
 		wch = ARG.wcptr[i];
-		if ((wch >= 0xD800 && wch <= 0xDFFF) || (wch > 0xff && MB_CUR_MAX == 1)) // ajout de iscorrect
+		if ((wch >= 0xD800 && wch <= 0xDFFF) || (wch > 0xff && MB_CUR_MAX == 1))
 			return (-1);
 		else if (wch <= 127 || (wch <= 0xff && MB_CUR_MAX == 1))
 			buff_fillwith(env, wch);
@@ -335,4 +333,10 @@ int			buff_fillptr(t_env *env, t_arg *arg)
 	if ((arg->flags & 32) && padding)
 		buff_fillwithnumber(env, ' ', padding);
 	return (0);		
+}
+
+int			buff_fillnptr(t_env *env, t_arg *arg)
+{
+	*(ARG.iptr) = env->printflen + env->buffi;
+	return (0);
 }

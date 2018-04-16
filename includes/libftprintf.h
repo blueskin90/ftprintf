@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/14 20:00:46 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/16 19:25:00 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,12 +208,10 @@ int					buff_fillwstr(t_env *env, t_arg *arg);
 int					buff_fillint(t_env *env, t_arg *arg);
 int					buff_filloct(t_env *env, t_arg *arg);
 int					buff_fillhexa(t_env *env, t_arg *arg);
-
 int					buff_filluint(t_env *env, t_arg *arg);
-
 int					buff_fillchar(t_env *env, t_arg *arg);
-
 int					buff_fillptr(t_env *env, t_arg *arg);
+int					buff_fillnptr(t_env *env, t_arg *arg);
 /*
 ** BUFFER HANDLING FUNCTIONS
 */

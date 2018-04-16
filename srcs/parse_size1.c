@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/14 22:06:42 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/16 19:25:08 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ int				parse_nsize(t_env *env, t_arg *arg)
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
+	buff_fillnptr(env, arg);
+	env->str++;
 	return (0);
 }
 
