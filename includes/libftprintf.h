@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:25:57 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 09:58:06 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ typedef struct				s_splitdouble
 	int						finalbuffersize;
 	int						fractionsize;
 	int						exponentf;
+	int						isexponentzero;
 	int						decistart;
 }							t_splitdouble;
 

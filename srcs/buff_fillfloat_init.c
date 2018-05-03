@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 08:13:19 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:26:49 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 10:00:24 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int				doubleinit(t_arg *arg, t_splitdouble *final)
 	final->exponentf = 0;
 	final->bitdec = 0;
 	final->decistart = 0;
+	final->isexponentzero = 0;
 	if (final->iserror)
 		arg->flags = (arg->flags & 32) ? 32 : 0;
 	return (1);
@@ -102,6 +103,7 @@ int				longdoubleinit(t_arg *arg, t_splitdouble *final)
 	final->exponentf = 0;
 	final->decistart = 0;
 	final->bitdec = 0;
+	final->isexponentzero = 0;
 	expset(final, num);
 	if (final->iserror && (arg->flags & 8))
 		arg->flags ^= 8;

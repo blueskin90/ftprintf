@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 09:50:17 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:31:38 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 10:00:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int				setcharvalue(t_splitdouble *num)
 		if (check == 1)
 		{
 			num->intvalue[i] += '0';
-//			write(1, num->intvalue + i, 1);
+	//		write(1, num->intvalue + i, 1);
 		}
 		i++;
 	}
@@ -82,13 +82,15 @@ int				reorganizeexp(t_splitdouble *num)
 	}
 	if (i < num->intvaluesize)
 		num->decistart = num->decivaluesize - num->bitdec - (num->intvaluesize - i) + 1;
+	else if (i == num->intvaluesize && num->intvalue[num->intvaluesize - 1])
+		num->isexponentzero = 1;
 	while (i < num->intvaluesize)
 	{
 		num->decivalue[num->decivaluesize - num->bitdec - (num->intvaluesize - i) + 1] = num->intvalue[i];
 		num->exponentf++;
 		i++;
 	}
-	if (num->exponentf)
+	if (num->exponentf || num->isexponentzero)
 	{
 		num->bitdec += num->exponentf - 1;
 		tabinit(num->intvalue, num->intvaluesize);
