@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 20:26:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:40:33 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 07:13:58 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int				parse_token(t_env *env)
 
 	arg_init(&arg);
 	while ((retval = env->parse[(int)*env->str](env, &arg)) > 0)
-	   ;	
+		;
 // remplacer par ALL apres
 //		env->parse[*env->str + 128]; a faire quand jaurai fini mon array
 //	printf("param = %d\nflags = %hhd\nwidth = %d\nprec = %d\nlength = %hhd\n type = %hhd\n", arg.param, arg.flags, arg.width, arg.prec, arg.length, arg.type); // a delete apres, pour verifier que mon token est correct
@@ -76,7 +76,11 @@ int					pfatoi(t_env *env)
 		result = result * 10 + *env->str - '0';
 		env->str++;
 		if (result > 2147483647)
+		{
+			while (*env->str >= '0' && *env->str <= '9')
+				env->str++;
 			return (-1);
+		}
 	}
 	return ((int)result);
 }
@@ -91,13 +95,19 @@ int				parse_error(t_env *env, t_arg *arg)
 int				parse_preci(t_env *env, t_arg *arg) // penser au wildchar
 {
 	env->str++;
-	if (*(env->str) == '*')
+	if (*env->str == '*')
 	{
 		arg->prec = va_arg(env->arg, int);
+		if (arg->prec < 0) 
+			arg->prec = -1;
 		env->str++;
 	}
 	else
+	{
 		arg->prec = pfatoi(env);
+		if (arg->prec < 0)
+			arg->prec = -1;
+	}
 	return (1);
 }
 
@@ -113,7 +123,14 @@ int				parse_wildchar(t_env *env, t_arg *arg)
 		env->str++;
 	}
 	else
+	{
 		arg->width = value;
+		if (arg->width < 0) 
+		{
+			arg->width = (-arg->width);
+			arg->flags |= 32;
+		}
+	}
 	return (1);
 }
 

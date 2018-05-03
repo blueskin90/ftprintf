@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:34:15 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 09:36:19 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,76 @@ int				parse_psize(t_env *env, t_arg *arg)
 	get_arg(env, arg);
 	arg_parse(env, arg);
 	buff_fillptr(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_esize(t_env *env, t_arg *arg)
+{
+	arg->cat = 1;
+	arg->type = 10;
+	arg->length = (arg->length >= 8) ? 8 : 0;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+//	printf("\nbuffi = %d\n", env->buffi);
+//	write(1, env->str, env->buffi);
+	buff_fillexp(env, arg);
+//	printf("\nbuffi = %d\n", env->buffi);
+//	write(1, env->buff, env->buffi);
+//	write(1, env->str, 1);
+	env->str++;
+//	write(1, env->str, 1);
+	return (0);
+}
+
+int				parse_fsize(t_env *env, t_arg *arg)
+{
+	arg->cat = 1;
+	arg->type = 11;
+	arg->length = (arg->length >= 8) ? 8 : 0;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+	buff_filldeci(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_gsize(t_env *env, t_arg *arg)
+{
+	arg->cat = 1;
+	arg->type = 12;
+	arg->length = (arg->length >= 8) ? 8 : 0;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+//	buff_fillexpdeci(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_asize(t_env *env, t_arg *arg)
+{
+	arg->cat = 1;
+	arg->type = 13;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+
+//	buff_fillhexadeci(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_bsize(t_env *env, t_arg *arg)
+{
+	arg->cat = 4;
+	arg->type =	14;	
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg); // useless mais on sait jamais
+	buff_fillbinary(env, arg);
 	env->str++;
 	return (0);
 }

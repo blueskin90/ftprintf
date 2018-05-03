@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:45:26 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/14 20:39:08 by toliver          ###   ########.fr       */
+/*   Updated: 2018/04/25 07:12:00 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ int			buff_putprefix(t_env *env, char c, int ishash)
 {
 	if (!ishash)
 		return (1);
-	else if ((c == 'o' || c == 'O') && ishash)
+	else if ((c == 'o' || c == 'O') && ishash) // penser a supprimer ishash
 		buff_fillwith(env, '0');
 	else if ((c == 'x' || c == 'X') && ishash)
 		buff_fillwithstr(env, ((c == 'x') ? "0x" : "0X"));
+	else if ((c == 'b' || c == 'B') && ishash)
+		buff_fillwithstr(env, ((c == 'b') ? "0b" : "0B"));
 	return (1);	
 }
 

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:40:37 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 05:15:31 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,7 @@ size_t		ft_wcharstrlen(t_env *env, t_arg *arg)
 	arg->width -= charnbr; // le nombre de 0 ou espaces a mettre
 	return (i);	
 }
-/*
-int			iscorrect(wchar_t *str)
-{
-	int		i;
 
-	i = 0;
-	while (str[i])
-	{
-		if ((str[i] >= 0xD800 && str[i] <= 0xDFFF) || (str[i] > 0xff && MB_CUR_MAX == 1))
-			return (0);
-		i++;
-	}
-	return (i);
-}
-*/
 int			issmaller(wchar_t *str, int prec)
 {
 	int		i;
@@ -340,3 +326,9 @@ int			buff_fillnptr(t_env *env, t_arg *arg)
 	*(ARG.iptr) = env->printflen + env->buffi;
 	return (1);
 }
+/*
+int			buff_fillexp(t_env *env, t_arg *arg)
+int			buff_fillexpdeci(t_env *env, t_arg *arg)
+int			buff_fillhexadeci(t_env *env, t_arg *arg)
+*/
+

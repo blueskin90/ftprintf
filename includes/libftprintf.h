@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:25:00 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 09:25:57 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ typedef union		u_types
 	intmax_t*				imaxptr;
 	size_t*					sizptr;
 	ptrdiff_t*				ptdptr;
+
+//	char					split[16];
 }					t_types;
 
 typedef struct		s_arg
@@ -129,11 +131,80 @@ typedef struct		s_env
 	int				lastparam;
 	va_list			arg;
 	int				(*parse[255])(struct s_env*, t_arg*);
-	int				(*get_arg[4][9])(struct s_env*, t_arg*);
+	int				(*get_arg[5][10])(struct s_env*, t_arg*);
 	char			null[7];
 }					t_env;
 
-int					ft_printf(const char *str, ...) __attribute__((format(printf,1,2)));
+/*
+**	FLOAT HANDLING STRUCTURES
+*/
+
+typedef struct				s_ldoublesplit
+{
+	unsigned long int		fraction:63;
+	unsigned int			intpart:1;
+	unsigned int			exponent:15;
+	unsigned int			sign:1;
+}							t_ldoublesplit;
+
+typedef union				u_ldouble
+{
+	long double				val;
+	t_ldoublesplit			value;
+}							t_ldouble;
+
+typedef	struct				s_doublesplit
+{
+	unsigned long long int	fraction:52;
+	unsigned int			exponent:11;
+	unsigned int			sign:1;
+}							t_doublesplit;
+
+typedef	union				u_double
+{
+	double					val;
+	t_doublesplit			value;
+}							t_double;
+
+typedef struct				s_splitdouble
+{
+	int						sign;
+	int						exp;
+	unsigned long int		fraction;
+	int						bytepos;
+	int						bitpos; // le bit avant lequel la virgule est
+	int						bitint;
+	char					intvalue[4933]; // log10(2^nbofbits) + 1; 
+	int						bitdec;
+	char					decivalue[16445]; // number of significantdecbits
+	int						intbit;
+	int						prec;
+	int						iserror;
+	int						isinf;
+	int						isnan;
+	int						bytebufferlimit;
+	int						intvaluesize;
+	int						decivaluesize;
+	int						finalbuffersize;
+	int						fractionsize;
+	int						exponentf;
+	int						decistart;
+}							t_splitdouble;
+
+int					buff_fillexp(t_env *env, t_arg *arg);
+int					buff_filldeci(t_env *env, t_arg *arg);
+int					splitinit(t_arg *arg, t_splitdouble *num);
+int					tabinit(char tab[], int limit);
+int					tabmul(char units[], int size, int multiplier);
+int					tabadd(char units[], int size, char toadd[]);
+int					separatenumber(t_splitdouble *num);
+int					separatenumberexp(t_splitdouble *num);
+int					roundingnumber(t_splitdouble *num, int prec);
+int					roundingnumberexp(t_splitdouble *num, int prec);
+/*
+** END OF FLOAT PART
+*/
+int					ft_printf(const char *str, ...);// __attribute__((format(printf,1,2)));
 
 /*
 ** BUFFER FILLING FUNCTIONS
@@ -194,6 +265,11 @@ int					parse_Ssize(t_env *env, t_arg *arg);
 int					parse_nsize(t_env *env, t_arg *arg);
 int					parse_psize(t_env *env, t_arg *arg);
 
+int					parse_esize(t_env *env, t_arg *arg);
+int					parse_fsize(t_env *env, t_arg *arg);
+int					parse_gsize(t_env *env, t_arg *arg);
+int					parse_asize(t_env *env, t_arg *arg);
+
 
 void				flags_cleanup(t_arg *arg); // pasur
 void				fill_buffer(t_env *env, char c, int i);
@@ -212,6 +288,15 @@ int					buff_filluint(t_env *env, t_arg *arg);
 int					buff_fillchar(t_env *env, t_arg *arg);
 int					buff_fillptr(t_env *env, t_arg *arg);
 int					buff_fillnptr(t_env *env, t_arg *arg);
+int					buff_putprefix(t_env *env, char c, int ishash);
+
+/*
+** FONCTIONS A L'ESSAI
+*/
+
+int					buff_fillbinary(t_env *env, t_arg *arg);
+int					parse_bsize(t_env *env, t_arg *arg);
+
 /*
 ** BUFFER HANDLING FUNCTIONS
 */

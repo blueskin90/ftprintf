@@ -6,13 +6,13 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2018/04/03 23:46:27 by toliver          ###   ########.fr        #
+#    Updated: 2018/05/03 06:59:37 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 
-FLAGS = -Wall -Wextra -Werror -Ofast
+FLAGS = -Werror -Wextra -Wall
 
 FILES = ft_printf \
 		parsing \
@@ -28,6 +28,12 @@ FILES = ft_printf \
 		buff_fillutility \
 		buff_fillchar \
 		buff_fillhexaoct \
+		buff_fillfloat \
+		buff_fillfloat_init \
+		buff_fillfloat_split \
+		buff_fillfloat_utility \
+		buff_fillfloat_rounding \
+		buff_fillbinary \
 
 SRC = $(addsuffix .c,  $(FILES))
 

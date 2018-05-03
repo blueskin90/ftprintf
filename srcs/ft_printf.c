@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:32:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/16 19:40:31 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/03 06:36:20 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void							env_getarrayinit(t_env *env)
 	while (++i < 4)
 	{
 		j = -1;
-		while (++j < 9)
+		while (++j < 10)
 			env->get_arg[i][j] = NULL;
 	}
 	env->get_arg[0][0] = &get_int;
@@ -38,6 +38,16 @@ void							env_getarrayinit(t_env *env)
 	env->get_arg[2][0] = &get_int;
 	env->get_arg[2][3] = &get_wintt;
 	env->get_arg[3][0] = &get_ptr;
+	env->get_arg[4][0] = &get_int;
+	env->get_arg[4][1] = &get_char; // voir si je dois pas mettre int
+	env->get_arg[4][2] = &get_short;
+	env->get_arg[4][3] = &get_long;
+	env->get_arg[4][4] = &get_longlong;
+	env->get_arg[4][5] = &get_intmaxt;
+	env->get_arg[4][6] = &get_sizet;
+	env->get_arg[4][7] = &get_ptrdifft;
+	env->get_arg[4][8] = &get_double;
+	env->get_arg[4][9] = &get_ldouble;
 	// ici si la fonction est a NULL on prend la fonction 0
 }
 
@@ -102,14 +112,20 @@ void							env_ptrarrayinit(t_env *env)
 	env->parse[110] = &parse_nsize; // ptr
 	env->parse[112] = &parse_psize;
 
-//	env->parse[101] = &parse_esize; // float ici le # force le . meme si le nombre est entier	
-//	env->parse[69] = &parse_Esize;
-//	env->parse[102] = &parse_fsize;
-//	env->parse[70] = &parse_Fsize;
-//	env->parse[103] = &parse_gsize;
-//	env->parse[71] = &parse_Gsize;
-//	env->parse[97] = &parse_asize;
-//	env->parse[65] = &parse_Asize;
+
+
+	env->parse[101] = &parse_esize; // float ici le # force le . meme si le nombre est entier	
+	env->parse[69] = &parse_esize;
+	env->parse[102] = &parse_fsize;
+	env->parse[70] = &parse_fsize;
+	env->parse[103] = &parse_gsize;
+	env->parse[71] = &parse_gsize;
+	env->parse[97] = &parse_asize;
+	env->parse[65] = &parse_asize;
+
+
+	env->parse[98] = &parse_bsize;  // affichage binaire	
+	env->parse[66] = &parse_bsize;
 }
 
 void							env_init(t_env *env, const char *str)
