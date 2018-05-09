@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:32:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 06:36:20 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/04 07:23:20 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,13 @@ void							env_getarrayinit(t_env *env)
 	// ici si la fonction est a NULL on prend la fonction 0
 }
 
+/*
+ * a mettre dans le .c ou je l'appelle
+static const		(*fct) g_dunction[256] =
+{
+	['a'] = &parse_aflag;
+	['b'] = &parse_bflag;
+*/
 void							env_ptrarrayinit(t_env *env)
 {
 	int							i;

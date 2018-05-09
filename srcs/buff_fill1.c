@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 05:15:31 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/04 05:40:32 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,12 +304,16 @@ int			buff_fillptr(t_env *env, t_arg *arg)
 	int			lengthtotal;
 	int			padding;
 
-	(void)env;
 	value = (uintmax_t)ARG.vptr;
 	length = (value == 0 && arg->prec == 0) ? 0 : ft_uintmaxtlenbase(value, 16);
 	numberofzeroes = (length < arg->prec) ? arg->prec - length : 0;
 	lengthtotal = length + numberofzeroes + 2;
 	padding = (arg->width > lengthtotal) ? arg->width - lengthtotal : 0;
+	if ((arg->flags & 8) && arg->prec == -1 && arg->width > 0 && length < arg->width)
+	{
+		numberofzeroes += (arg->width - 3 >= 0) ? arg->width - 3 : 0;
+		padding -= numberofzeroes;
+	}
 	if (!(arg->flags & 32) && padding)
 		buff_fillwithnumber(env, ' ', padding);
 	buff_fillwithstr(env, "0x");

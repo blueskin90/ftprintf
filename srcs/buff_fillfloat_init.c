@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 08:13:19 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 10:00:24 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/08 23:51:51 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int				expset(t_splitdouble *final, t_ldouble num)
 	{
 		final->iserror = 0;
 		final->exp = (!num.value.fraction) ? 0 : -16382;
+		final->issub = 1;
 	}
 	else if (num.value.exponent == 0x7FFF)
 	{
@@ -81,13 +82,19 @@ int				expset(t_splitdouble *final, t_ldouble num)
 	return (1);
 }
 
-int				longdoubleinit(t_arg *arg, t_splitdouble *final)
+int				longdoubleinit(t_arg *arg, t_splitdouble *final, int hexa)
 {
 	t_ldouble	num;
 	
 	tabinit(final->decivalue, 16445);	
 	tabinit(final->intvalue, 4933);
 	num.val = arg->argument.ld;
+	if (hexa)
+	{
+		final->issub = 0;
+		if (num.value.exponent)
+			num.value.intpart = 1;
+	}
 	final->sign = num.value.sign;
 	final->fraction = num.value.fraction;
 	final->intbit = num.value.intpart;
@@ -109,10 +116,10 @@ int				longdoubleinit(t_arg *arg, t_splitdouble *final)
 		arg->flags ^= 8;
 	return (1);
 }
-int					splitinit(t_arg *arg, t_splitdouble *num)
+int					splitinit(t_arg *arg, t_splitdouble *num, int hexa)
 {
 	if (arg->length == 8)
-		longdoubleinit(arg, num);
+		longdoubleinit(arg, num, hexa);
 	else
 		doubleinit(arg, num);
 	return (1);

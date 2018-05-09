@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 09:50:17 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 10:00:28 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/09 12:27:22 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,5 +242,135 @@ int				separatenumberexp(t_splitdouble *num)
 	num->bitint = (1 + num->exp < 0) ? 0 : 1 + num->exp;
 	num->bitdec = (num->fractionsize - num->exp < 0) ? 0 : num->fractionsize - num->exp;
 	splitvaluesexp(num, bytes);
+	return (1);
+}
+
+int							mustroundhex(char val[], int numtocheck, int size)
+{
+	int						i;
+
+	i = numtocheck;
+	while (i < size - 1)
+	{
+		i++;
+		if (val[i] < 8)
+		   return (0);
+		else if (val[i] > 8 || (val[i] == 8 && i == size - 1))
+			return (1);	
+	}
+	return (1);
+}
+
+int							roundinghexa(char values[], int prec, char *rounding)
+{
+	int						i;
+
+	if (!(prec < 0 || prec > 15))
+	{
+		i = prec;
+		if (mustroundhex(values, i, 16))
+		{
+			values[i] += 1;
+			while (i >= 0)
+			{
+				if (values[i] == 16)
+				{
+					values[i] = 0;
+					if (i - 1 >= 0)
+						values[i - 1] += 1;
+					else
+						(*rounding) += 1;
+				}
+				i--;
+			}
+		}
+	}
+	return (1);
+}
+
+int							calculatehexa(t_splitdouble *num, int offset, int prec)
+{
+	char		rounding;
+	char		values[16];
+	int			i;
+
+	rounding = 0;
+	i = 0;
+	while (i < 16)
+	{
+		values[i] = 0;
+		i++;
+	}
+	i = 0;
+	while (i < 16 && offset < num->fractionsize)
+	{
+		values[i] = ((num->fraction & (0b1111ull << (num->fractionsize - 3 - offset))) >> (num->fractionsize - 3 - offset));
+		offset += 4;
+		i++;
+	}
+	roundinghexa(values, prec, &rounding);
+	i = 0;
+	while (i < 15)
+	{
+		values[i] += ((values[i] <= 9) ? '0' : 'a' - 10);
+		i++;
+	}
+	if (rounding == 1)
+		num->exp -= 3;
+	rounding += '0';
+	if (rounding != '0')
+	{
+		num->intvalue[0] = rounding;
+		i = 0;
+		while (i < 16)
+		{
+			num->decivalue[i] = values[i];
+			i++;
+		}
+	//	write(1, &rounding, 1);
+	//	write(1, ".", 1);
+	//	write(1, values, 16);
+		num->decivaluesize = 16;
+	}
+	else
+	{
+		num->intvalue[0] = values[0];
+		i = 1;
+		while (i < 16)
+		{
+			num->decivalue[i - 1] = values[i];
+			i++;
+		}
+		num->decivaluesize = 15;
+//		write(1, values, 1);
+//		write(1, ".", 1);
+//		write(1, values + 1, 15);
+	}
+//	printf("p%+d\n", num->exp);
+//	write(1, "\nTEST\n", 6);
+	return (1);
+}
+
+int							separatenumberhexa(t_splitdouble *num, int prec)
+{
+	char			intpart;
+	int						i;
+
+	i = 0;
+	if (num->issub)
+	{
+		intpart = ((num->fraction & (0b1111ull << (num->fractionsize - 3))) >> (num->fractionsize - 3));
+		while (!(intpart & 0b1000))
+		{
+			i++;
+			intpart = ((num->fraction & (0b1111ull << (num->fractionsize - 3 - i))) >> (num->fractionsize - 3 - i));
+		}
+	}
+	if (num->fractionsize == 52)
+		i-=3;
+	num->exp -= (3 + i);
+	calculatehexa(num, i, prec);
+//	num->intvalue[0] = intpart + ((intpart <= 9) ? '0' : 'a' - 10);
+//	splitvaluesexp(num, bytes);
 	return (1);
 }

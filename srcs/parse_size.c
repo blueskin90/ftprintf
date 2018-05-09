@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 21:25:31 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 03:28:29 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/04 04:57:07 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void			fill_buffer(t_env *env, char c, int i)
 int				parse_pcsize(t_env *env, t_arg *arg)
 {
 	env->str++;
+	arg->cat = -1;
 	flags_cleanup(arg);
 	if (arg->width > 1 && !(arg->flags & 32))
 		fill_buffer(env, (arg->flags & 8) ? '0' : ' ', arg->width - 1);

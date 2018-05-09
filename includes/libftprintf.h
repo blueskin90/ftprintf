@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:58:06 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/09 12:27:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,16 +190,19 @@ typedef struct				s_splitdouble
 	int						exponentf;
 	int						isexponentzero;
 	int						decistart;
+	int						issub;
 }							t_splitdouble;
 
 int					buff_fillexp(t_env *env, t_arg *arg);
 int					buff_filldeci(t_env *env, t_arg *arg);
-int					splitinit(t_arg *arg, t_splitdouble *num);
+int					buff_fillexphexa(t_env *env, t_arg *arg);
+int					splitinit(t_arg *arg, t_splitdouble *num, int hexa);
 int					tabinit(char tab[], int limit);
 int					tabmul(char units[], int size, int multiplier);
 int					tabadd(char units[], int size, char toadd[]);
 int					separatenumber(t_splitdouble *num);
 int					separatenumberexp(t_splitdouble *num);
+int					separatenumberhexa(t_splitdouble *num, int prec);
 int					roundingnumber(t_splitdouble *num, int prec);
 int					roundingnumberexp(t_splitdouble *num, int prec);
 /*

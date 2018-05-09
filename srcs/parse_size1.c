@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:36:19 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/09 12:27:23 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,8 @@ int				parse_Csize(t_env *env, t_arg *arg)
 {
 	arg->cat = 2;
 	arg->type = 6;
-	arg->length = (arg->length == 0) ? 3 : 0;
+	arg->length = (arg->length == 1) ? 3 : 0;
+	arg->length = (arg->length == 0 || arg->length == 3) ? 3 : 0;
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
@@ -174,7 +175,8 @@ int				parse_Ssize(t_env *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 7;
-	arg->length = (arg->length == 0) ? 3 : 0;
+	arg->length = (arg->length == 1) ? 3 : 0;
+	arg->length = (arg->length == 0 || arg->length == 3) ? 3 : 0;
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
@@ -266,7 +268,7 @@ int				parse_asize(t_env *env, t_arg *arg)
 	get_arg(env, arg);
 	arg_parse(env, arg);
 
-//	buff_fillhexadeci(env, arg);
+	buff_fillexphexa(env, arg);
 	env->str++;
 	return (0);
 }

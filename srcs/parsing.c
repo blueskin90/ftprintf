@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 20:26:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 07:13:58 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/04 05:22:49 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,15 @@ int					pfatoi(t_env *env)
 
 int				parse_error(t_env *env, t_arg *arg)
 {
-	(void)env;
-	(void)arg;
+	if (*env->str)
+	{
+		arg->argument.uc = *env->str;
+		arg->cat = 2;
+		flags_cleanup(arg);
+		if (buff_fillchar(env, arg) < 0)
+			return (-1);
+		env->str++;
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 00:37:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:31:35 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/09 12:27:20 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ int					buff_filldeci(t_env *env, t_arg *arg)
 	t_splitdouble	final;
 	static char		testbuffer[16448] = {0};
 
-	splitinit(arg, &final);
+	splitinit(arg, &final, 0);
 	tabinit(testbuffer, final.finalbuffersize);
 	if (!final.iserror)
 	{
@@ -244,7 +244,7 @@ int					buff_fillexp(t_env *env, t_arg *arg)
 	t_splitdouble	final;
 	static char		testbuffer[16448] = {0};
 
-	splitinit(arg, &final);
+	splitinit(arg, &final, 0);
 	tabinit(testbuffer, final.finalbuffersize);
 	if (!final.iserror)
 	{
@@ -259,4 +259,96 @@ int					buff_fillexp(t_env *env, t_arg *arg)
 	else
 		writeerror(env, arg, &final);
 	return (1);
+}
+
+int					numsize(int exp)
+{
+	int				i;
+	i				= 1;
+	while (exp / 10)
+	{
+		exp /= 10;
+		i++;
+	}
+	return (i);
+}
+
+int					writeexponenthexa(t_env *env, t_splitdouble *num)
+{
+	buff_fillwith(env, 'p') ;
+	buff_fillwith(env, (num->exp < 0) ? '-' : '+');
+	buff_imaxtoa(env, num->exp);
+	return (1);
+}
+
+int					writenumberhexa(t_env *env, t_arg *arg, t_splitdouble *num)
+{
+	int				size;
+	int				i;
+	int				padding;
+	
+
+	size = 1 + ((arg->prec != 0 || (arg->prec == 0 && arg->flags & 2)) ? 1 : 0);
+	size += arg->prec + 4 + numsize(num->exp);
+	size += (num->sign || arg->flags & 16 || arg->flags & 4) ? 1 : 0;
+	padding = arg->width - size;
+	if (!(arg->flags & 32))
+	{
+		if (arg->flags & 8)
+		{
+			buff_putfloatsign(num->sign, arg->flags, env);
+			buff_fillwith(env, '0');
+			buff_fillwith(env, 'x');
+		}
+		if (!(arg->flags & 8))
+			buff_padding(env, arg, padding);
+		if (!(arg->flags & 8))
+		{
+			buff_putfloatsign(num->sign, arg->flags, env);
+			buff_fillwith(env, '0');
+			buff_fillwith(env, 'x');
+		}
+		if (arg->flags & 8)
+			buff_fillwithnumber(env, '0', padding);
+	}
+	buff_fillwith(env, num->intvalue[0]);
+	if (arg->prec || arg->flags & 2)
+		buff_fillwith(env, '.');
+	i = 0;
+	while (i < num->decivaluesize && num->prec)
+	{
+		buff_fillwith(env, num->decivalue[i]);
+		i++;
+		num->prec--;
+	}
+	while (num->prec >= 0)
+	{
+		buff_fillwith(env, '0');
+		num->prec--;
+	}
+	writeexponenthexa(env, num);
+	if (arg->flags & 32)
+		buff_padding(env, arg, padding);
+	return (1);
+}
+
+int					buff_fillexphexa(t_env *env, t_arg *arg)
+{
+	t_splitdouble	final;
+
+	splitinit(arg, &final, 1);
+	if (!final.iserror)
+	{
+		separatenumberhexa(&final, arg->prec);
+		//ft_printf("sign = %b, intpart = %b, exponent = %b, fraction = %b\n", final.sign, final.intbit, final.exp, final.fraction);
+//		ft_printf("%#LLb\n", arg->argument.ld);
+//		roundingnumberexp(&final, arg->prec);
+		writenumberhexa(env, arg, &final);
+//		write(1, env->buff, env->buffi);
+//		write(1, env->str, 1);
+	}
+	else
+		writeerror(env, arg, &final);
+	return (1);
+
 }
