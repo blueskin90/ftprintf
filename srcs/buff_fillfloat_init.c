@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 08:13:19 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/08 23:51:51 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/10 14:51:01 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ int				longdoubleinit(t_arg *arg, t_splitdouble *final, int hexa)
 		arg->flags ^= 8;
 	return (1);
 }
+
+/*
 int					splitinit(t_arg *arg, t_splitdouble *num, int hexa)
 {
 	if (arg->length == 8)
@@ -124,5 +126,14 @@ int					splitinit(t_arg *arg, t_splitdouble *num, int hexa)
 		doubleinit(arg, num);
 	return (1);
 }
+*/
 
+int					splitinit(t_arg *arg, t_splitdouble *num)
+{
+	if (arg->length == 8)
+		longdoubleinit(arg, num);
+	else
+		doubleinit(arg, num);
+	return (1);
+}
 

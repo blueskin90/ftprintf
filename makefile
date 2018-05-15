@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2018/05/09 13:06:09 by toliver          ###   ########.fr        #
+#    Updated: 2018/05/14 13:13:52 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,15 +25,16 @@ FILES = ft_printf \
 		parse_size \
 		parse_size1 \
 		get_arg1 \
+		buff_fillfloat \
+		buff_fillbinary \
 		buff_fillutility \
 		buff_fillchar \
 		buff_fillhexaoct \
 		buff_fillfloat \
-		buff_fillfloat_init \
-		buff_fillfloat_split \
-		buff_fillfloat_utility \
-		buff_fillfloat_rounding \
-		buff_fillbinary \
+#		buff_fillfloat_init \
+#		buff_fillfloat_split \
+#		buff_fillfloat_utility \
+#		buff_fillfloat_rounding \
 
 SRC = $(addsuffix .c,  $(FILES))
 
@@ -42,7 +43,6 @@ SRC_PATH = srcs/
 SRCS = $(addprefix $(SRC_PATH),$(SRC))
 
 OBJ_PATH = objs/
-
 
 OBJS = $(addprefix $(OBJ_PATH),$(SRC:.c=.o))
 

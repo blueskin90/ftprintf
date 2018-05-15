@@ -5,350 +5,262 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 00:37:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/09 12:27:20 by toliver          ###   ########.fr       */
+/*   Created: 2018/05/10 14:52:38 by toliver           #+#    #+#             */
+/*   Updated: 2018/05/15 06:19:42 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int					copyintexp(int *buffi, char buffer[], t_splitdouble *num)
+int					initdouble(t_splitd *num, double val)
 {
-	buffer[*buffi] = (num->intvalue[num->intvaluesize - 1] >= '0') ? num->intvalue[num->intvaluesize - 1] :'0';
-	(*buffi)++;
-	return (1);
-}
+	t_double		split;
 
-int					writeexponent(t_env *env, t_splitdouble *num)
-{
-	buff_fillwith(env, (*env->str < 'a') ? 'E' : 'e');
-	num->exponentf = (num->exp == 0 && num->fraction == 0) ? 0 : num->exponentf;
-	buff_fillwith(env, (num->exponentf < 0) ? '-' : '+');
-	if (num->exponentf < 10 && num->exponentf > -10)
-		buff_fillwith(env, '0');
-	buff_imaxtoa(env, num->exponentf);
-	return (1);
-}
-
-
-
-int					copyint(int *buffi, char buffer[], int size, t_splitdouble *num)
-{
-	int				i;
-
-	i = 0;
-	if (!num->bitint)
+	split.val = val;
+	num->sign = split.value.sign;
+	num->islong = 0;
+	num->isnan = 0;
+	num->isinf = 0;
+	num->iszero = 0;
+	if (split.value.exp == DBL_MAX_EXP_VAL)
 	{
-		buffer[*buffi] = '0';
-		(*buffi)++;
-		return (0);
+		num->isinf = ((split.value.fra) ? 0 : 1);
+		num->isnan = !num->isinf;
 	}
-	while (!num->intvalue[i] && i < size)
-		i++;
-	if (i == size)
+	else if (split.value.exp == 0)
 	{
-		buffer[*buffi] = '0';
-		(*buffi)++;
+		num->issub = ((split.value.fra) ? 1 : 0);
+		num->exp = (num->issub) ? -1022 : 0;
+		num->fra = (num->issub) ? split.value.fra : 0;
+		num->iszero = !num->issub;
 	}
 	else
-		while (i < size)
+	{
+		num->exp = split.value.exp - 1023;
+		num->fra = split.value.fra + 0x10000000000000;
+	}
+	return (1);
+}
+
+int					initlongdouble(t_splitd *num, long double val)
+{
+	t_ldouble		split;
+
+	split.val = val;
+	num->sign = split.value.sign;
+	num->islong = 1;
+	num->isnan = 0;
+	num->isinf = 0;
+	num->iszero = 0;
+	num->issub = 0;
+	if (split.value.exp == 0)
+	{
+		if (!split.value.fra)
+			num->iszero = 1;
+		else
 		{
-			buffer[*buffi] = num->intvalue[i];
-			(*buffi)++;
-			i++;
+			num->exp = -16382;
+			num->fra = split.value.fra + 0x8000000000000000 * split.value.intpart;
+			num->issub = 1;
 		}
+	}
+	else if (split.value.exp == LDBL_MAX_EXP_VAL)
+	{
+		num->isnan = (split.value.fra) ? 1 : 0;
+		num->isinf = !num->isnan;
+	}
+	else
+	{
+		num->exp = split.value.exp - 16383;
+		num->fra = split.value.fra + 0x8000000000000000 * split.value.intpart;
+	}
 	return (1);
 }
 
-int					copydeci(int *buffi, char buffer[], int issharp, t_splitdouble *num)
+int				splitinit(t_arg *arg, t_splitd *num, t_env *env)
 {
-	int				i;
-	if (num->prec > 0 || issharp)
-	{
-		buffer[*buffi] = '.';
-		(*buffi)++;
-	}
-	if (num->prec == 0)
+	if (!(arg->length == 8))
+		initdouble(num, arg->argument.d);
+	else
+		initlongdouble(num, arg->argument.ld);
+	num->isrounded = 0;
+	num->isuppercase = (*env->str <= 'Z') ? 1 : 0;
+	num->type = (*env->str == 'f' || *env->str == 'F') ? ISDECI : num->type;
+	num->type = (*env->str == 'e' || *env->str == 'E') ? ISEXP : num->type;
+	num->type = (*env->str == 'g' || *env->str == 'G') ? ISSHORTEST : num->type;
+	num->type = (*env->str == 'a' || *env->str == 'A') ? ISHEXA : num->type;
+	if (num->type == ISHEXA && num->islong && !num->issub)
+		num->fra |= 0x8000000000000000;
+	return (1);
+}
+
+
+
+int						roundinghexa(t_splitd *num, char value[])
+{
+	int					i;
+	
+	if (value[num->prec + 1] < 8)
 		return (0);
-	i = num->decivaluesize - num->bitdec;
-	while (num->prec > 0 && i < num->decivaluesize)
+	else if (value[num->prec + 1] > 8)
+		value[num->prec] += 1;
+	else if (value[num->prec + 1] == 8) //&& value[num->prec] % 2 != 0)
+		value[num->prec] += 1;
+	i = num->prec;
+	while (value[i] > 15 && i >= 0)
 	{
-		buffer[*buffi] = num->decivalue[i];
-		(*buffi)++;
-		(num->prec)--;
-		i++;	
+		if (i > 0)
+			value[i - 1] += 1;
+		else
+		{
+			num->exp -= 4; // ptet a changer si ca merde
+			num->isrounded = 1;
+		}
+		value[i] -= 16;
+		i--;
 	}
 	return (1);
 }
-/*
-int					copyerror(int *i, char buffer[], t_splitdouble *num, int ismaj)
+
+int						hexavaluesetd(t_hexa hex, t_splitd *num, char value[])
 {
-	if (num->isinf)
+	int					i;
+	int					ii;
+
+	i = 7;
+	ii = 0;
+	while (((hex.byte[7] & 0xf0)) < 1)
 	{
-		buffer[*i] = 'i' - ismaj * 32;
-		buffer[*i + 1] = 'n' - ismaj * 32;
-		buffer[*i + 2] = 'f' - ismaj * 32;
+		hex.fra = hex.fra << 1;
+		num->exp--;
 	}
-	else
+	while (i >= 0)
 	{
-		buffer[*i] = 'n' - ismaj * 32;
-		buffer[*i + 1] = 'a' - ismaj * 32;
-		buffer[*i + 2] = 'n' - ismaj * 32;
+		value[ii] = ((hex.byte[i] & 0xf0) >> 4);
+		value[ii + 1] = hex.byte[i] & 0xf;
+		ii += 2;
+		i--;
 	}
-	num->prec = 3 + ((num->sign && num->fraction == 0) ? 1 : 0);
-	return (1);
-}
-*/
-
-int					copynumber(int *i, char buffer[], t_splitdouble *num, t_arg *arg)
-{
-	copyint(i, buffer, num->intvaluesize, num);
-	copydeci(i, buffer, arg->flags & 2, num);
 	return (1);
 }
 
-int					buff_putfloatsign(int sign, char flags, t_env *env)
+int						setaswritable(char value[], int size, int uppercase)
 {
-	if (sign)
-		buff_fillwith(env, '-');
-	else if (flags & 4)
-		buff_fillwith(env, ' ');
-	else if (flags & 16)
-		buff_fillwith(env, '+');
-	return (1);
-}
-
-int					writenumberexp(t_env *env, t_arg *arg, t_splitdouble *num, char buf[])
-{
-	int				i;
-	int				padding;
-	
+	int		i;
 
 	i = 0;
-	copyintexp(&i, buf, num);
-	copydeci(&i, buf, arg->flags & 2, num);
-//	write(1, buf, i); // pour le test
-	while (buf[i] && i < num->finalbuffersize)
-		i++;
-	i += (num->sign || arg->flags & 4 || arg->flags & 16) ? 1 : 0;
-	padding = arg->width - i - num->prec - 2 - ((ft_uintmaxtlenbase(num->exponentf, 10) < 2) ? 2 : ft_uintmaxtlenbase((num->exponentf > 0) ? num->exponentf : -num->exponentf, 10));
-//	printf("arg->width %d, i %d, num->prec %d, len exp %zu\n", arg->width, i, num->prec, ft_uintmaxtlenbase((num->exponentf < 0) ? -num->exponentf : num->exponentf, 10));
-//	printf("padding = %d\n", padding);
-	if (arg->flags & 8 || arg->flags & 32 || arg->flags & 16)
-		buff_putfloatsign(num->sign, arg->flags, env);
-	if (!(arg->flags & 32))
-		buff_padding(env, arg, padding);
-	if (!(arg->flags & 8) && !(arg->flags & 32) && !(arg->flags & 16))
-		buff_putfloatsign(num->sign, arg->flags, env);
-	i = 0;
-	while (buf[i])
+	while (i < size)
 	{
-		buff_fillwith(env, buf[i]);
+		value[i] += (value[i] <= 9) ? '0' : 'a' - 10 - 32 * uppercase;
 		i++;
 	}
-	while (num->prec)
-	{
-		buff_fillwith(env, '0');
-		num->prec--;
-	}
-	writeexponent(env, num);
-	if (arg->flags & 32)
-		buff_padding(env, arg, padding);
 	return (1);
 }
 
-int					writenumber(t_env *env, t_arg *arg, t_splitdouble *num, char buf[])
+int						numberlen(int number)
 {
-	int				i;
-	int				padding;
-	
+	int		i;
 
-	i = 0;
-	copynumber(&i, buf, num, arg);
-	while (buf[i] && i < num->finalbuffersize)
-		i++;
-	i += (num->sign || arg->flags & 4 || arg->flags & 16) ? 1 : 0;
-	padding = arg->width - i - num->prec;
-	if (arg->flags & 8 || arg->flags & 32 || arg->flags & 16)
-		buff_putfloatsign(num->sign, arg->flags, env);
-	if (!(arg->flags & 32))
-		buff_padding(env, arg, padding);
-	if (!(arg->flags & 8) && !(arg->flags & 32) && !(arg->flags & 16))
-		buff_putfloatsign(num->sign, arg->flags, env);
-	i = 0;
-	while (buf[i])
+	i = 1;
+	number = (number < 0) ? -number : number;
+	while (number / 10)
 	{
-		buff_fillwith(env, buf[i]);
-		i++;
-	}
-	while (num->prec)
-	{
-		buff_fillwith(env, '0');
-		num->prec--;
-	}
-	if (arg->flags & 32)
-		buff_padding(env, arg, padding);
-	return (1);
-}
-
-
-int					writeerror(t_env *env, t_arg *arg, t_splitdouble *num)
-{
-	int				ismaj;
-	int				padding;
-
-	ismaj = (*env->str < 'a') ? 1 : 0; 
-	padding = arg->width - 3 - ((num->sign && num->isinf) ? 1 : 0);
-	if (!(arg->flags & 32))
-		buff_padding(env, arg, padding);
-	if (num->isinf)
-	{
-		if (num->sign)
-			buff_fillwith(env, '-');
-		buff_fillwith(env, 'i' - ismaj * 32);
-		buff_fillwith(env, 'n' - ismaj * 32);
-		buff_fillwith(env, 'f' - ismaj * 32);
-	}
-	else
-	{
-		buff_fillwith(env, 'n' - ismaj * 32);
-		buff_fillwith(env, 'a' - ismaj * 32);
-		buff_fillwith(env, 'n' - ismaj * 32);
-	}
-	if (arg->flags & 32)
-		buff_padding(env, arg, padding);
-	return (1);
-}
-int					buff_filldeci(t_env *env, t_arg *arg)
-{
-	t_splitdouble	final;
-	static char		testbuffer[16448] = {0};
-
-	splitinit(arg, &final, 0);
-	tabinit(testbuffer, final.finalbuffersize);
-	if (!final.iserror)
-	{
-		separatenumber(&final);
-		//ft_printf("sign = %b, intpart = %b, exponent = %b, fraction = %b\n", final.sign, final.intbit, final.exp, final.fraction);
-//		ft_printf("%#LLb\n", arg->argument.ld); 
-		roundingnumber(&final, arg->prec);
-		writenumber(env, arg, &final, testbuffer);
-	}
-	else
-		writeerror(env, arg, &final);
-	return (1);
-}
-
-int					buff_fillexp(t_env *env, t_arg *arg)
-{
-	t_splitdouble	final;
-	static char		testbuffer[16448] = {0};
-
-	splitinit(arg, &final, 0);
-	tabinit(testbuffer, final.finalbuffersize);
-	if (!final.iserror)
-	{
-		separatenumberexp(&final);
-		//ft_printf("sign = %b, intpart = %b, exponent = %b, fraction = %b\n", final.sign, final.intbit, final.exp, final.fraction);
-//		ft_printf("%#LLb\n", arg->argument.ld);
-		roundingnumberexp(&final, arg->prec);
-		writenumberexp(env, arg, &final, testbuffer);
-//		write(1, env->buff, env->buffi);
-//		write(1, env->str, 1);
-	}
-	else
-		writeerror(env, arg, &final);
-	return (1);
-}
-
-int					numsize(int exp)
-{
-	int				i;
-	i				= 1;
-	while (exp / 10)
-	{
-		exp /= 10;
+		number = number / 10;
 		i++;
 	}
 	return (i);
 }
 
-int					writeexponenthexa(t_env *env, t_splitdouble *num)
+int						buff_fillexponenthexa(t_env *env, int up, int exp)
 {
-	buff_fillwith(env, 'p') ;
-	buff_fillwith(env, (num->exp < 0) ? '-' : '+');
-	buff_imaxtoa(env, num->exp);
+	buff_fillwith(env, ((up) ? 'P' : 'p'));
+	buff_fillwith(env, ((exp > 0) ? '+' : '-'));
+	buff_imaxtoa(env, exp);
 	return (1);
 }
 
-int					writenumberhexa(t_env *env, t_arg *arg, t_splitdouble *num)
+int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 {
-	int				size;
-	int				i;
-	int				padding;
-	
+	int					length;
+	int					padding;
+	int					i;
 
-	size = 1 + ((arg->prec != 0 || (arg->prec == 0 && arg->flags & 2)) ? 1 : 0);
-	size += arg->prec + 4 + numsize(num->exp);
-	size += (num->sign || arg->flags & 16 || arg->flags & 4) ? 1 : 0;
-	padding = arg->width - size;
-	if (!(arg->flags & 32))
-	{
-		if (arg->flags & 8)
-		{
-			buff_putfloatsign(num->sign, arg->flags, env);
-			buff_fillwith(env, '0');
-			buff_fillwith(env, 'x');
-		}
-		if (!(arg->flags & 8))
-			buff_padding(env, arg, padding);
-		if (!(arg->flags & 8))
-		{
-			buff_putfloatsign(num->sign, arg->flags, env);
-			buff_fillwith(env, '0');
-			buff_fillwith(env, 'x');
-		}
-		if (arg->flags & 8)
-			buff_fillwithnumber(env, '0', padding);
-	}
-	buff_fillwith(env, num->intvalue[0]);
-	if (arg->prec || arg->flags & 2)
+	length = num->intsize + ((num->prec == -1) ? num->decisize : num->prec) + (((num-> decisize && num->prec != 0) || arg->flags & 2) ? 1 : 0) + 4 + numberlen(num->exp) + (((arg->flags & 16) || (arg->flags & 4) || num->sign) ? 1 : 0);
+	padding = (arg->width - length > 0) ? arg->width - length : 0;
+	if (padding && !(arg->flags & 32) && (!(arg->flags & 8)))
+		buff_fillwithnumber(env, ' ', padding);
+	if (num->sign)
+		buff_fillwith(env, '-');
+	else if ((arg->flags & 16) || (arg->flags & 4))
+		buff_fillwith(env, ((arg->flags & 16) ? '+' : ' '));
+	buff_fillwithstr(env, ((num->isuppercase) ? "0X" : "0x"));
+	if (padding && (arg->flags & 8))
+		buff_fillwithnumber(env, '0', padding);
+	buff_fillwith(env, ((num->isrounded) ? '1' : value[0]));
+	if ((num-> decisize && num->prec != 0) || arg->flags & 2)
 		buff_fillwith(env, '.');
-	i = 0;
-	while (i < num->decivaluesize && num->prec)
+	if (num->prec > 0)
 	{
-		buff_fillwith(env, num->decivalue[i]);
-		i++;
-		num->prec--;
+		i = (num->isrounded) ? 0 : 1;
+		while (i <= num->decisize)
+		{
+			buff_fillwith(env, value[i]);
+			i++;
+		}
 	}
-	while (num->prec >= 0)
-	{
-		buff_fillwith(env, '0');
-		num->prec--;
-	}
-	writeexponenthexa(env, num);
-	if (arg->flags & 32)
-		buff_padding(env, arg, padding);
+	if (arg->prec > num->decisize)
+		buff_fillwithnumber(env, '0', arg->prec - num->decisize);
+	buff_fillexponenthexa(env, num->isuppercase, num->exp);
+//	printf("length = %d, intsize = %d, decisize = %d, numberlen = %d, num->exp %d\n", length, num->intsize, num->decisize, numberlen(num->exp), num->exp);
+	// affichage de test
+	
+//	write(1, value, 16);
+//	printf("%+d\n", num->exp);// penser apres a le faire varier selon les arrondis
+	(void)env;
 	return (1);
 }
 
-int					buff_fillexphexa(t_env *env, t_arg *arg)
+int						buff_fillhexalongd(t_splitd *num, t_env *env, t_arg *arg)
 {
-	t_splitdouble	final;
-
-	splitinit(arg, &final, 1);
-	if (!final.iserror)
-	{
-		separatenumberhexa(&final, arg->prec);
-		//ft_printf("sign = %b, intpart = %b, exponent = %b, fraction = %b\n", final.sign, final.intbit, final.exp, final.fraction);
-//		ft_printf("%#LLb\n", arg->argument.ld);
-//		roundingnumberexp(&final, arg->prec);
-		writenumberhexa(env, arg, &final);
-//		write(1, env->buff, env->buffi);
-//		write(1, env->str, 1);
-	}
-	else
-		writeerror(env, arg, &final);
+	(void)arg;
+	(void)num;
+	(void)env;
 	return (1);
+}
 
+int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
+{
+	t_hexa				hex;
+	char				value[16];
+
+	hex.fra = num->fra << 8;
+	hexavaluesetd(hex, num, value);	
+	num->intsize = 1;
+	num->decisize = 15;
+	while (value[num->decisize] == 0 && num->decisize > 0)
+		num->decisize--;
+	if (num->prec != -1 && num->prec < num->decisize)
+	{
+		roundinghexa(num, value);
+		num->decisize = num->prec;
+	}
+	setaswritable(value, 16, num->isuppercase);
+	writehexa(num, env, value, arg);
+
+	//printf("num->decisize = %d\n", num->decisize);// nombre de decimaux, coincide avec la position dans le tableau de chars :D
+	(void)env;
+	return (1);
+}
+
+int						buff_fillfloat(t_env *env, t_arg *arg)
+{
+	static t_splitd		num;
+
+	splitinit(arg, &num, env);
+	num.prec = arg->prec;
+	num.width = arg->width;
+	if (!num.isinf && !num.isnan)
+	if (num.type == ISHEXA && !num.isnan && !num.isinf)
+		(num.islong) ? buff_fillhexalongd(&num, env, arg) : buff_fillhexad(&num, env, arg);
+	return (1);
 }

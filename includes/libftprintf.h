@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/09 12:27:28 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/15 05:53:07 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,17 @@
 # define CONVERSION "jzLtlh" // ll et hh = 6 et 7
 # define BUFFSIZE 2048
 # define ARG arg->argument
+
+# define DBL_FRA_DIG 52
+# define LDBL_FRA_DIG 63
+# define DBL_MAX_EXP_VAL 0x7FF
+# define LDBL_MAX_EXP_VAL 0x7FFF
+# define ISHEXA 3
+# define ISSHORTEST 2
+# define ISEXP 1
+# define ISDECI 0
+
+
 /*
 enum e_type {I, SC, SI, LI, LLI, IMAX, SIZ, PTD, UI, UC, USI, ULI, ULLI, UIMAX, DO,
 	LD, WI, CPTR, WCPTR, VPTR, IPTR, SCPTR, SIPTR, LIPTR, LLIPTR, IMAXPTR,
@@ -45,15 +56,7 @@ enum e_type {I, SC, SI, LI, LLI, IMAX, SIZ, PTD, UI, UC, USI, ULI, ULLI, UIMAX, 
 enum e_conv {j, z, L, t, l, ll, h, hh};
 
 enum e_size {c, C, d, D, i, o, O, u, U, x, X, e, E, f, F, g, G, a, A, n, p, s, S};
-
-typedef struct		s_flags
-{
-	enum e_flags	flag;
-	void			(*function[6])(char*);
-}					t_flags;
 */
-
-
 typedef union		u_types
 {
 /*
@@ -97,18 +100,17 @@ typedef union		u_types
 /*
 **	p
 */
-	int*					iptr;
-	signed char*			scptr;
-	short int*				siptr;
-	long int*				liptr;
-	long long int*			lliptr;
-	intmax_t*				imaxptr;
-	size_t*					sizptr;
-	ptrdiff_t*				ptdptr;
+	int						*iptr;
+	signed char				*scptr;
+	short int				*siptr;
+	long int				*liptr;
+	long long int			*lliptr;
+	intmax_t				*imaxptr;
+	size_t					*sizptr;
+	ptrdiff_t				*ptdptr;
 
-//	char					split[16];
 }					t_types;
-
+ 
 typedef struct		s_arg
 {
 	int				param;
@@ -141,9 +143,9 @@ typedef struct		s_env
 
 typedef struct				s_ldoublesplit
 {
-	unsigned long int		fraction:63;
+	unsigned long int		fra:63;
 	unsigned int			intpart:1;
-	unsigned int			exponent:15;
+	unsigned int			exp:15;
 	unsigned int			sign:1;
 }							t_ldoublesplit;
 
@@ -155,8 +157,8 @@ typedef union				u_ldouble
 
 typedef	struct				s_doublesplit
 {
-	unsigned long long int	fraction:52;
-	unsigned int			exponent:11;
+	unsigned long long int	fra:52;
+	unsigned int			exp:11;
 	unsigned int			sign:1;
 }							t_doublesplit;
 
@@ -166,6 +168,36 @@ typedef	union				u_double
 	t_doublesplit			value;
 }							t_double;
 
+/*
+**	HEXA STRUCT
+*/
+
+typedef union				u_hexa
+{
+	unsigned long long int	fra;
+	unsigned char			byte[8];
+}							t_hexa;
+
+typedef struct				s_splitd
+{
+	unsigned int			sign:1;
+	int						exp;
+	unsigned long int		fra:64;
+	int						prec;
+	int						width;
+	int						intsize;
+	int						decisize;
+	int						isrounded:1;
+//	unsigned long long int	numbers[914];
+	unsigned int			isnan:1;
+	unsigned int			isinf:1;
+	unsigned int			iszero:1;
+	unsigned int			islong:1;
+	unsigned int			issub:1;
+	unsigned int			isuppercase:1;
+	unsigned int			type:2;
+}							t_splitd;
+/*
 typedef struct				s_splitdouble
 {
 	int						sign;
@@ -192,11 +224,12 @@ typedef struct				s_splitdouble
 	int						decistart;
 	int						issub;
 }							t_splitdouble;
-
+*/
+/*
 int					buff_fillexp(t_env *env, t_arg *arg);
 int					buff_filldeci(t_env *env, t_arg *arg);
 int					buff_fillexphexa(t_env *env, t_arg *arg);
-int					splitinit(t_arg *arg, t_splitdouble *num, int hexa);
+int					splitinit(t_arg *arg, t_splitdouble *num);
 int					tabinit(char tab[], int limit);
 int					tabmul(char units[], int size, int multiplier);
 int					tabadd(char units[], int size, char toadd[]);
@@ -205,6 +238,8 @@ int					separatenumberexp(t_splitdouble *num);
 int					separatenumberhexa(t_splitdouble *num, int prec);
 int					roundingnumber(t_splitdouble *num, int prec);
 int					roundingnumberexp(t_splitdouble *num, int prec);
+*/
+
 /*
 ** END OF FLOAT PART
 */
@@ -300,6 +335,7 @@ int					buff_putprefix(t_env *env, char c, int ishash);
 
 int					buff_fillbinary(t_env *env, t_arg *arg);
 int					parse_bsize(t_env *env, t_arg *arg);
+int					buff_fillfloat(t_env *env, t_arg *arg);
 
 /*
 ** BUFFER HANDLING FUNCTIONS
@@ -311,8 +347,8 @@ int					buff_padding(t_env *env, t_arg *arg, int width);
 int					buff_fillwith(t_env *env, char c);
 int					buff_fillwithstr(t_env *env, char *str);
 int					buff_fillwithnumber(t_env *env, char c, int i);
+int					buff_fillnumber(t_env *env, int nbr);
 int					buff_padding(t_env *env, t_arg *arg, int width);
-
 int					buff_uimaxtoahexa(t_env *env, uintmax_t value);
 
 /*

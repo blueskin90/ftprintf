@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/30 09:53:48 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 09:27:02 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/10 13:33:23 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,29 @@ int					roundingdeci(char value[], int limit, t_splitdouble *num, int prec)
 {
 	int				i;
 
-	i = limit - num->fractionsize + num->exp + prec;
+	i = limit - num->fractionsize + num->exp + prec - 1;
 	if (i < limit)
 	{
 		if (i == limit - 1 && value[i] >= '5')
 		{
-			value[i - 1] += 1;
-			i--;
+			if (value[i] > 5)
+			{
+				value[i - 1] += 1;
+				i--;
+			}
+			else if (value[i] == 5)
+			{
+				value[i - 1] += ((value[i - 1] & 1) ? 1 : 0);
+			}
 		}
 		else if (i < limit - 1)
 		{
 			if (value[i + 1] > '5')
+			{
 				value[i] += 1;
-			else if (value[i + 1] == '5' && mustround(value, limit, i + 1))
-				value[i] += 1;
+			}
+			else if (value[i + 1] == '5')// && mustround(value, limit, i + 1))
+				value[i] += (value[i] & 1) ? 1 : 0;
 		}
 		while (value[i] > '9' && i > 0 && value[i - 1])
 		{
@@ -71,11 +80,13 @@ int					roundingdeci(char value[], int limit, t_splitdouble *num, int prec)
 			value[i - 1] += 1;
 			i--;
 		}
-		if ((i == 0 && value[i] > '9') || (!value[i - 1] && value[i] > '9'))
+		if ((i == 0 && value[i] > '9') || (i != 0 && !value[i - 1] && value[i] > '9'))
 		{
 			value[i] -= 10;
 			return (1);
 		}
+		else if (i == 0 && value[i] == '5')
+			return ((num->intvalue[0] & 1) ? 1 : 0);
 	}
 	return (0);
 }

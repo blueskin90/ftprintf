@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 06:32:28 by toliver           #+#    #+#             */
-/*   Updated: 2018/04/28 07:58:42 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/14 14:14:05 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ int					buff_printdouble(t_env *env, t_arg *arg)
 	if (arg->flags & 2)
 		buff_fillwith(env, ' ');
 	while (++i < 11)
-		buff_fillwith(env, ((value.value.exponent >> (10 - i)) & 1) ? '1' : '0');
+		buff_fillwith(env, ((value.value.exp >> (10 - i)) & 1ull) ? '1' : '0');
 	if (arg->flags & 2)
 		buff_fillwith(env, ' ');
 	i = -1;
 	while (++i < 52)
-		buff_fillwith(env, ((value.value.fraction >> (51 -i)) & 1) ? '1' : '0');
+		buff_fillwith(env, ((value.value.fra >> (51 -i)) & 1ull) ? '1' : '0');
 	return (1);
 }
 
@@ -43,7 +43,7 @@ int					buff_printldouble(t_env *env, t_arg *arg)
 	if (arg->flags & 2)
 		buff_fillwith(env, ' ');
 	while (++i < 15)
-		buff_fillwith(env, ((value.value.exponent >> (14 - i)) & 1) ? '1' : '0');
+		buff_fillwith(env, ((value.value.exp >> (14 - i)) & 1ull) ? '1' : '0');
 	if (arg->flags & 2)
 		buff_fillwith(env, ' ');
 	buff_fillwith(env, (value.value.intpart) ? '1' : '0');
@@ -51,7 +51,7 @@ int					buff_printldouble(t_env *env, t_arg *arg)
 		buff_fillwith(env, ' ');
 	i = -1;
 	while (++i < 63)
-		buff_fillwith(env, ((value.value.fraction >> (62 - i)) & 1) ? '1' : '0');
+		buff_fillwith(env, ((value.value.fra >> (62u - i)) & 1ull) ? '1' : '0');
 	return (1);
 }
 int				buff_printbits(t_env *env, t_arg *arg, int length)
@@ -86,6 +86,17 @@ int				get_bitlen(t_arg *arg)
 		return (64 + (arg->flags & 2) ? 2 : 0);
 	else if (arg->length == 9)
 		return (80 + (arg->flags & 2) ? 2 : 0); // ou ptet 80 jsais pas
+	else
+	{
+		if (arg->length == 0)
+			return (32);
+		else if (arg->length == 1)
+			return (8);
+		else if (arg->length == 2)
+			return (16);
+		else
+			return (64);
+	}
 	while (arg->argument.uimax >> i)
 		i++;
 	if (i == 0)

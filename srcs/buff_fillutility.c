@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:38:57 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/03 05:15:32 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/15 06:19:41 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,9 @@ int				buff_fillwithstr(t_env *env, char *str)
 		str++;
 	}
 	return (1);
+}
+
+int				buff_fillnumber(t_env *env, int nbr)
+{
+	
 }
