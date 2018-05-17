@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:52:38 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/17 04:07:32 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/17 06:13:33 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 	if (padding && (arg->flags & 8))
 		buff_fillwithnumber(env, '0', padding);
 	buff_fillwith(env, ((num->isrounded) ? '1' : value[0]));
-	if ((num->prec != 0) || arg->flags & 2)
+	if (((num->prec != 0) && num->decisize)|| arg->flags & 2)
 		buff_fillwith(env, '.');
 	if (num->prec > 0 || num->prec == -1)
 	{
