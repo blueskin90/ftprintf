@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:52:38 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/15 06:19:42 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/17 04:07:32 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ int				splitinit(t_arg *arg, t_splitd *num, t_env *env)
 	return (1);
 }
 
-
-
 int						roundinghexa(t_splitd *num, char value[])
 {
 	int					i;
@@ -115,6 +113,7 @@ int						roundinghexa(t_splitd *num, char value[])
 		{
 			num->exp -= 4; // ptet a changer si ca merde
 			num->isrounded = 1;
+			num->decisize--;
 		}
 		value[i] -= 16;
 		i--;
@@ -174,7 +173,7 @@ int						numberlen(int number)
 int						buff_fillexponenthexa(t_env *env, int up, int exp)
 {
 	buff_fillwith(env, ((up) ? 'P' : 'p'));
-	buff_fillwith(env, ((exp > 0) ? '+' : '-'));
+	buff_fillwith(env, ((exp >= 0) ? '+' : '-'));
 	buff_imaxtoa(env, exp);
 	return (1);
 }
@@ -185,7 +184,8 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 	int					padding;
 	int					i;
 
-	length = num->intsize + ((num->prec == -1) ? num->decisize : num->prec) + (((num-> decisize && num->prec != 0) || arg->flags & 2) ? 1 : 0) + 4 + numberlen(num->exp) + (((arg->flags & 16) || (arg->flags & 4) || num->sign) ? 1 : 0);
+
+	length = num->intsize + ((num->prec == -1) ? num->decisize : num->prec) + (((num->prec != 0) || arg->flags & 2) ? 1 : 0) + 4 + numberlen(num->exp) + (((arg->flags & 16) || (arg->flags & 4) || num->sign) ? 1 : 0);
 	padding = (arg->width - length > 0) ? arg->width - length : 0;
 	if (padding && !(arg->flags & 32) && (!(arg->flags & 8)))
 		buff_fillwithnumber(env, ' ', padding);
@@ -197,9 +197,9 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 	if (padding && (arg->flags & 8))
 		buff_fillwithnumber(env, '0', padding);
 	buff_fillwith(env, ((num->isrounded) ? '1' : value[0]));
-	if ((num-> decisize && num->prec != 0) || arg->flags & 2)
+	if ((num->prec != 0) || arg->flags & 2)
 		buff_fillwith(env, '.');
-	if (num->prec > 0)
+	if (num->prec > 0 || num->prec == -1)
 	{
 		i = (num->isrounded) ? 0 : 1;
 		while (i <= num->decisize)
@@ -211,6 +211,8 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 	if (arg->prec > num->decisize)
 		buff_fillwithnumber(env, '0', arg->prec - num->decisize);
 	buff_fillexponenthexa(env, num->isuppercase, num->exp);
+	if (padding && (arg->flags & 32) && !(arg->flags & 8))
+		buff_fillwithnumber(env, ' ', padding);
 //	printf("length = %d, intsize = %d, decisize = %d, numberlen = %d, num->exp %d\n", length, num->intsize, num->decisize, numberlen(num->exp), num->exp);
 	// affichage de test
 	
@@ -222,24 +224,20 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 
 int						buff_fillhexalongd(t_splitd *num, t_env *env, t_arg *arg)
 {
-	(void)arg;
-	(void)num;
-	(void)env;
-	return (1);
-}
-
-int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
-{
 	t_hexa				hex;
 	char				value[16];
 
-	hex.fra = num->fra << 8;
-	hexavaluesetd(hex, num, value);	
+	if (!num->iszero)
+	{
+		hex.fra = num->fra;
+		hexavaluesetd(hex, num, value);	
+	}
 	num->intsize = 1;
-	num->decisize = 15;
+	num->decisize = (num->iszero) ? 0 : 15;
+	num->prec = (num->iszero) ? 0 : num->prec;
 	while (value[num->decisize] == 0 && num->decisize > 0)
 		num->decisize--;
-	if (num->prec != -1 && num->prec < num->decisize)
+	if (num->prec != -1 && num->prec < num->decisize && !num->iszero)
 	{
 		roundinghexa(num, value);
 		num->decisize = num->prec;
@@ -248,6 +246,43 @@ int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
 	writehexa(num, env, value, arg);
 
 	//printf("num->decisize = %d\n", num->decisize);// nombre de decimaux, coincide avec la position dans le tableau de chars :D
+	return (1);
+}
+
+int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
+{
+	t_hexa				hex;
+	char				value[16];
+
+	if (!num->iszero)
+	{
+		hex.fra = num->fra << 8;
+		hexavaluesetd(hex, num, value);	
+	}
+	num->intsize = 1;
+	num->decisize = (num->iszero) ? 0 : 15;
+	num->prec = (num->iszero) ? 0 : num->prec;
+	while (value[num->decisize] == 0 && num->decisize > 0)
+		num->decisize--;
+	if (num->prec != -1 && num->prec < num->decisize && !num->iszero)
+	{
+		roundinghexa(num, value);
+		num->decisize = num->prec;
+	}
+	setaswritable(value, 16, num->isuppercase);
+	writehexa(num, env, value, arg);
+
+	//printf("num->decisize = %d\n", num->decisize);// nombre de decimaux, coincide avec la position dans le tableau de chars :D
+	return (1);
+}
+
+int						buff_fillerror(t_splitd num, t_env *env, int type)
+{
+	if (num.isnan)
+
+	write(1, "1", 1);
+	(void)type;
+	(void)num;
 	(void)env;
 	return (1);
 }
@@ -259,8 +294,9 @@ int						buff_fillfloat(t_env *env, t_arg *arg)
 	splitinit(arg, &num, env);
 	num.prec = arg->prec;
 	num.width = arg->width;
-	if (!num.isinf && !num.isnan)
-	if (num.type == ISHEXA && !num.isnan && !num.isinf)
+	if (num.isinf || num.isnan)
+		buff_fillerror(num, env, num.type);
+	else if (num.type == ISHEXA)
 		(num.islong) ? buff_fillhexalongd(&num, env, arg) : buff_fillhexad(&num, env, arg);
 	return (1);
 }

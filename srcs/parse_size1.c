@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/15 05:52:19 by toliver          ###   ########.fr       */
+/*   Updated: 2018/05/17 02:50:31 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,6 @@ int				parse_asize(t_env *env, t_arg *arg)
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
-
 	buff_fillfloat(env, arg);
 	env->str++;
 	return (0);
