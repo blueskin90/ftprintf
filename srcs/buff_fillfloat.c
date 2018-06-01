@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:52:38 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/17 06:13:33 by toliver          ###   ########.fr       */
+/*   Updated: 2018/06/01 10:28:26 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,54 @@ int				splitinit(t_arg *arg, t_splitd *num, t_env *env)
 		num->fra |= 0x8000000000000000;
 	return (1);
 }
+/*
+int						roundinghexa(t_splitd *num, char value[])
+{
+	int					i;
+	int					test[16];
+	int					retenue;
 
+	i = 0;
+	(void)num;
+//	while (i < 16)
+//	{
+//		printf("%c", value[i] + ((value[i] <= 9) ? '0' : 'a' - 10));
+//		i++;
+//	}
+//	printf("\n");
+
+	i = 15;
+	while (i > num->prec)
+	{
+		test[i] = (value[i] >> 1) + ((i > 0 && i < num->prec - 1) ? ((value[i] & 0b1) << 3) : 0);
+		i--;
+	}
+	while (i > 0)
+	{
+		test[i] = 0;
+		i--;
+	}
+	i = 0;
+//	while (i < 16)
+//	{
+//		printf("%c", test[i] + ((test[i] <= 9) ? '0' : 'a' - 10));
+//		i++;
+//	}
+//	printf("\n");
+	i = 15;
+	retenue = 0;
+	while (i >= 0)
+	{
+		value[i] += test[i] + retenue;
+		retenue = value[i] / 16;
+		value[i] %= 16;
+		i--;
+	}
+	if (i == 0 && retenue)
+		num->isrounded = 1;
+	return (1);
+}
+*/
 int						roundinghexa(t_splitd *num, char value[])
 {
 	int					i;
@@ -102,8 +149,15 @@ int						roundinghexa(t_splitd *num, char value[])
 		return (0);
 	else if (value[num->prec + 1] > 8)
 		value[num->prec] += 1;
-	else if (value[num->prec + 1] == 8) //&& value[num->prec] % 2 != 0)
-		value[num->prec] += 1;
+
+	else if (value[num->prec + 1] == 8)// && (value[num->prec] & 1)) //&& value[num->prec] % 2 != 0)
+	{
+		i = 0;
+		while (num->prec + 1 + i < 16 && value[num->prec + 1 + i] == 0)
+			i++;
+		if ((num->prec + 1 + i == 16 && !(value[num->prec] & 1)) || num->prec + 1 + i < 16)
+			value[num->prec] += 1;
+	}
 	i = num->prec;
 	while (value[i] > 15 && i >= 0)
 	{
@@ -187,7 +241,7 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 
 	length = num->intsize + ((num->prec == -1) ? num->decisize : num->prec) + (((num->prec != 0) || arg->flags & 2) ? 1 : 0) + 4 + numberlen(num->exp) + (((arg->flags & 16) || (arg->flags & 4) || num->sign) ? 1 : 0);
 	padding = (arg->width - length > 0) ? arg->width - length : 0;
-	if (padding && !(arg->flags & 32) && (!(arg->flags & 8)))
+	if (padding && !(arg->flags & 32) && !(arg->flags & 8))
 		buff_fillwithnumber(env, ' ', padding);
 	if (num->sign)
 		buff_fillwith(env, '-');
@@ -197,7 +251,7 @@ int						writehexa(t_splitd *num, t_env *env, char value[], t_arg *arg)
 	if (padding && (arg->flags & 8))
 		buff_fillwithnumber(env, '0', padding);
 	buff_fillwith(env, ((num->isrounded) ? '1' : value[0]));
-	if (((num->prec != 0) && num->decisize)|| arg->flags & 2)
+	if (((num->prec == -1) && num->decisize) || arg->flags & 2 || num->prec > 0)
 		buff_fillwith(env, '.');
 	if (num->prec > 0 || num->prec == -1)
 	{
@@ -242,7 +296,8 @@ int						buff_fillhexalongd(t_splitd *num, t_env *env, t_arg *arg)
 		roundinghexa(num, value);
 		num->decisize = num->prec;
 	}
-	setaswritable(value, 16, num->isuppercase);
+	if (!num->iszero)
+		setaswritable(value, 16, num->isuppercase);
 	writehexa(num, env, value, arg);
 
 	//printf("num->decisize = %d\n", num->decisize);// nombre de decimaux, coincide avec la position dans le tableau de chars :D
@@ -275,28 +330,53 @@ int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
 	//printf("num->decisize = %d\n", num->decisize);// nombre de decimaux, coincide avec la position dans le tableau de chars :D
 	return (1);
 }
-
-int						buff_fillerror(t_splitd num, t_env *env, int type)
+// avec 0 ca affiche du caca :(
+int						buff_fillerror(t_splitd *num, t_env *env, t_arg *arg)
 {
-	if (num.isnan)
+	char				buffer[5];
+	int					i;
 
-	write(1, "1", 1);
-	(void)type;
-	(void)num;
-	(void)env;
+	i = 0;
+	if (num->isinf)
+	{
+		if (num->sign)
+			buffer[i++] = '-';
+		else if ((arg->flags & 16) || (arg->flags & 4))
+			buffer[i++] = ((arg->flags & 16) ? '+' : ' ');
+		buffer[i++] = (num->isuppercase) ? 'I' : 'i';
+		buffer[i++] = (num->isuppercase) ? 'N' : 'n';
+		buffer[i++] = (num->isuppercase) ? 'F' : 'f';
+	}
+	else
+	{
+		buffer[i++] = (num->isuppercase) ? 'N' : 'n';
+		buffer[i++] = (num->isuppercase) ? 'A' : 'a';
+		buffer[i++] = (num->isuppercase) ? 'N' : 'n';
+	}
+	buffer[i] = 0;
+	arg->length = 0;
+	arg->flags &= 32;
+	arg->prec = i;
+	arg->argument.cptr = (char*)(&buffer);
+	buff_fills(env, arg);
 	return (1);
 }
 
 int						buff_fillfloat(t_env *env, t_arg *arg)
 {
 	static t_splitd		num;
+	static t_bigint		number;
 
 	splitinit(arg, &num, env);
 	num.prec = arg->prec;
 	num.width = arg->width;
 	if (num.isinf || num.isnan)
-		buff_fillerror(num, env, num.type);
+		buff_fillerror(&num, env, arg);
 	else if (num.type == ISHEXA)
 		(num.islong) ? buff_fillhexalongd(&num, env, arg) : buff_fillhexad(&num, env, arg);
+	else if (num.type == ISEXP)
+		buff_fillexp(&num, &number, env, arg);
+	else if (num.type == ISDECI)
+		buff_fillfloatdeci(&num, &number, env, arg);
 	return (1);
 }

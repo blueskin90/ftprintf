@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:30:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/15 05:53:07 by toliver          ###   ########.fr       */
+/*   Updated: 2018/06/01 09:37:32 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,18 @@ typedef struct				s_splitd
 	unsigned int			isuppercase:1;
 	unsigned int			type:2;
 }							t_splitd;
+
+typedef struct				s_bigint
+{
+	long long unsigned int	number[968];
+	long long unsigned int	value[968];
+	char					fullnum[16457];
+	int						fullnumbuffer;
+	int						comapos;
+	int						rank;
+	int						exp;
+}							t_bigint;
+
 /*
 typedef struct				s_splitdouble
 {
@@ -336,6 +348,18 @@ int					buff_putprefix(t_env *env, char c, int ishash);
 int					buff_fillbinary(t_env *env, t_arg *arg);
 int					parse_bsize(t_env *env, t_arg *arg);
 int					buff_fillfloat(t_env *env, t_arg *arg);
+int					buff_fillexplong(t_splitd *num, t_env *env, t_arg *arg);
+int					buff_fillexp(t_splitd *num, t_bigint *number, t_env *env, t_arg *arg);
+int					buff_fillfloatdeci(t_splitd *num, t_bigint *number, t_env *env, t_arg *arg);
+int					fill_bigint(t_bigint *number, t_splitd *num);
+int					float_rounding(t_bigint *number, int *prec);
+int					putfloatsign(int sign, char flags, t_env *env);
+
+
+int					mulnum(t_bigint *num, int value);
+int					multab(t_bigint *num, int value);
+int					divtab(t_bigint *num, int value);
+int					addtab(t_bigint *num);
 
 /*
 ** BUFFER HANDLING FUNCTIONS
@@ -350,7 +374,6 @@ int					buff_fillwithnumber(t_env *env, char c, int i);
 int					buff_fillnumber(t_env *env, int nbr);
 int					buff_padding(t_env *env, t_arg *arg, int width);
 int					buff_uimaxtoahexa(t_env *env, uintmax_t value);
-
 /*
 ** UTILITY
 */

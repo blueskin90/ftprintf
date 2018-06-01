@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2018/05/14 13:13:52 by toliver          ###   ########.fr        #
+#    Updated: 2018/05/30 19:35:56 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,9 @@ FILES = ft_printf \
 		buff_fillchar \
 		buff_fillhexaoct \
 		buff_fillfloat \
+		buff_fillfloat_exp \
+		buff_fillfloat_deci \
+		bigint_handle \
 #		buff_fillfloat_init \
 #		buff_fillfloat_split \
 #		buff_fillfloat_utility \
