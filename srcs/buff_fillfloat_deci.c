@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 02:23:40 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 15:46:29 by toliver          ###   ########.fr       */
+/*   Updated: 2018/06/07 03:38:24 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ int				float_rounding(t_bigint *number, int *prec)
 		*prec = 6;
 	if ((*prec) + 1 > numberofdeci
 			|| number->fullnum[number->comapos + *prec + 1] < '5')
-		return (1);
+		return (0);
 	else if (number->fullnum[number->comapos + *prec + 1] > '5')
 		retenue = 1;
 	else if (number->fullnum[number->comapos + *prec + 1] == '5'
 			&& mustround(number, *prec, numberofdeci))
 		retenue = 1;
 	i = number->comapos + *prec;
-	float_rounding_tilcoma(&i, &retenue, number);
+	float_rounding_tilcoma(&retenue, &i, number);
 	if (retenue == 1 && i == number->comapos)
 		float_rounding_pastcoma(retenue, i, number);
 	return (1);
