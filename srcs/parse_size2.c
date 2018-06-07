@@ -1,68 +1,75 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_size1.c                                      :+:      :+:    :+:   */
+/*   parse_size2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/22 18:10:03 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 21:53:26 by toliver          ###   ########.fr       */
+/*   Created: 2018/06/06 21:48:54 by toliver           #+#    #+#             */
+/*   Updated: 2018/06/06 21:49:19 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-void			arg_parse(t_env *env, t_arg *arg)
-{
-	(void)arg;
-	(void)env;
-}
-
-/*
-** PENSER A GERER le $ dans la suivante
-*/
-
-int				get_arg(t_env *env, t_arg *arg)
-{
-	if (env->get_arg[arg->cat][arg->length] == NULL)
-		return (env->get_arg[arg->cat][0](env, arg));
-	else
-		return (env->get_arg[arg->cat][arg->length](env, arg));
-}
-
-int				parse_dsize(t_env *env, t_arg *arg)
+int				parse_bigosize(t_env *env, t_arg *arg)
 {
 	arg->cat = 0;
-	arg->type = 1;
-	flags_cleanup(arg);
-	get_arg(env, arg);
-	arg_parse(env, arg);
-	buff_fillint(env, arg);
-	env->str++;
-	return (0);
-}
-
-int				parse_bigdsize(t_env *env, t_arg *arg)
-{
-	arg->cat = 0;
-	arg->type = 1;
+	arg->type = 2;
 	arg->length = (arg->length < 3) ? 3 : arg->length;
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
-	buff_fillint(env, arg);
+	buff_filloct(env, arg);
 	env->str++;
 	return (0);
 }
 
-int				parse_osize(t_env *env, t_arg *arg)
+int				parse_usize(t_env *env, t_arg *arg)
 {
 	arg->cat = 0;
-	arg->type = 2;
+	arg->type = 3;
 	flags_cleanup(arg);
 	get_arg(env, arg);
 	arg_parse(env, arg);
-	buff_filloct(env, arg);
+	buff_filluint(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_bigusize(t_env *env, t_arg *arg)
+{
+	arg->cat = 0;
+	arg->type = 3;
+	arg->length = (arg->length < 3) ? 3 : arg->length;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+	buff_filluint(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_xsize(t_env *env, t_arg *arg)
+{
+	arg->cat = 0;
+	arg->type = 4;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+	buff_fillhexa(env, arg);
+	env->str++;
+	return (0);
+}
+
+int				parse_bigxsize(t_env *env, t_arg *arg)
+{
+	arg->cat = 0;
+	arg->type = 5;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+	buff_fillhexa(env, arg);
 	env->str++;
 	return (0);
 }

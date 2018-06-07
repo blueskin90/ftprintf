@@ -1,43 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_arg1.c                                         :+:      :+:    :+:   */
+/*   get_arg2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/30 00:27:04 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 17:14:36 by toliver          ###   ########.fr       */
+/*   Created: 2018/06/06 17:13:55 by toliver           #+#    #+#             */
+/*   Updated: 2018/06/06 17:14:07 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				get_intmaxt(t_env *env, t_arg *arg)
+int				get_int(t_env *env, t_arg *arg)
 {
-	arg->argument.imax = va_arg(env->arg, intmax_t);
+	arg->argument.i = va_arg(env->arg, int);
 	return (1);
 }
 
-int				get_sizet(t_env *env, t_arg *arg)
+int				get_char(t_env *env, t_arg *arg)
 {
-	arg->argument.siz = va_arg(env->arg, size_t);
+	arg->argument.i = (char)va_arg(env->arg, int);
 	return (1);
 }
 
-int				get_ptrdifft(t_env *env, t_arg *arg)
+int				get_short(t_env *env, t_arg *arg)
 {
-	arg->argument.ptd = va_arg(env->arg, ptrdiff_t);
+	arg->argument.si = (short int)va_arg(env->arg, int);
 	return (1);
 }
 
-int				get_ldouble(t_env *env, t_arg *arg)
+int				get_long(t_env *env, t_arg *arg)
 {
-	arg->argument.ld = va_arg(env->arg, long double);
+	arg->argument.li = va_arg(env->arg, long int);
 	return (1);
 }
 
-int				get_double(t_env *env, t_arg *arg)
+int				get_longlong(t_env *env, t_arg *arg)
 {
-	arg->argument.d = va_arg(env->arg, double);
+	arg->argument.lli = va_arg(env->arg, long long int);
 	return (1);
 }

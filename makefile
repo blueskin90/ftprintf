@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2018/06/01 10:35:38 by toliver          ###   ########.fr        #
+#    Updated: 2018/06/07 02:50:05 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,13 @@ FILES = ft_printf \
 		parse_conv2 \
 		parse_size \
 		parse_size1 \
+		parse_size2 \
+		parse_size3 \
+		parse_size4 \
+		parse_size5 \
 		get_arg1 \
+		get_arg2 \
+		get_arg3 \
 		buff_fillfloat \
 		buff_fillbinary \
 		buff_fillutility \
@@ -34,6 +40,23 @@ FILES = ft_printf \
 		buff_fillfloat_exp \
 		buff_fillfloat_deci \
 		bigint_handle \
+		buff_fillhexaoctutil \
+		buff_fillfloat_exp_write \
+		buff_fillfloat_deci_write \
+		fillfloat_deci_bigint \
+		fillfloat_deci_bigint2 \
+		buff_fill_utility \
+		buff_fillint_getcasted \
+		buff_fillptr \
+		buff_fillint \
+		buff_fillint_utility \
+		parsing1 \
+		env_ptrarrayinit \
+		buff_fillfloatinit \
+		buff_fillfloat_roundinghexa \
+		buff_fillfloat_writehexa \
+		buff_fillfloat_error \
+		buff_fillfloat_hexautil \
 #		buff_fillfloat_init \
 #		buff_fillfloat_split \
 #		buff_fillfloat_utility \

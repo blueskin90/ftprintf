@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_conv2.c                                      :+:      :+:    :+:   */
+/*   parse_size5.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/21 20:36:33 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:45:39 by toliver          ###   ########.fr       */
+/*   Created: 2018/06/06 21:51:27 by toliver           #+#    #+#             */
+/*   Updated: 2018/06/06 21:51:46 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				parse_lmajconv(t_env *env, t_arg *arg)
+int				parse_psize(t_env *env, t_arg *arg)
 {
+	arg->cat = 3;
+	arg->type = 9;
+	arg->length = 0;
+	flags_cleanup(arg);
+	get_arg(env, arg);
+	arg_parse(env, arg);
+	buff_fillptr(env, arg);
 	env->str++;
-	if (*env->str == 'L')
-	{
-		env->str++;
-		arg->length = 9;
-	}
-	else
-		arg->length = 8;
-	return (1);
+	return (0);
 }

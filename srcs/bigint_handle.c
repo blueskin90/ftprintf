@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 19:32:52 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/01 07:35:59 by toliver          ###   ########.fr       */
+/*   Updated: 2018/06/06 13:53:29 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int				mulnum(t_bigint *num, int value)
 	}
 	return (1);
 }
-
-
 
 int				multab(t_bigint *num, int value)
 {
@@ -65,7 +63,8 @@ int				divtab(t_bigint *num, int value)
 	{
 		num->number[967 - i] /= value;
 		if (i < num->rank)
-			num->number[967 - i] += ((num->number[967 - i - 1] % value) * 10000000000000000);
+			num->number[967 - i] +=
+				((num->number[967 - i - 1] % value) * 10000000000000000);
 		i++;
 	}
 	if (num->number[967 - num->rank] == 0)
@@ -82,7 +81,8 @@ int				addtab(t_bigint *num)
 	retenue = 0;
 	while (i <= num->rank)
 	{
-		num->number[967 - i] = num->number[967 - i] + num->value[967 - i] + retenue;
+		num->number[967 - i] = num->number[967 - i] +
+			num->value[967 - i] + retenue;
 		retenue = num->number[967 - i] / 100000000000000000;
 		num->number[967 - i] %= 100000000000000000;
 		i++;
@@ -91,5 +91,3 @@ int				addtab(t_bigint *num)
 	}
 	return (1);
 }
-
-

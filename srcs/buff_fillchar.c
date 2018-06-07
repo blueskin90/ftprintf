@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:39:43 by toliver           #+#    #+#             */
-/*   Updated: 2018/05/04 05:20:57 by toliver          ###   ########.fr       */
+/*   Updated: 2018/06/06 22:00:48 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,13 @@ int				buff_fillwchar(t_env *env, t_arg *arg)
 	wint_t		value;
 	int			size;
 
-	size = octsize(ARG.wi);
-	value = ARG.wi;
-	if (ARG.wi > 0x10FFFF || ARG.wi < 0 || (ARG.wi >= 0xD800 && ARG.wi <= 0xDFFF))
+	size = octsize(arg->argument.wi);
+	value = arg->argument.wi;
+	if (arg->argument.wi > 0x10FFFF || arg->argument.wi < 0
+			|| (arg->argument.wi >= 0xD800 && arg->argument.wi <= 0xDFFF))
 		return (-1);
-	else if (ARG.wi <= 127 || (ARG.wi <= 0xff && MB_CUR_MAX == 1))
+	else if (arg->argument.wi <= 127
+			|| (arg->argument.wi <= 0xff && MB_CUR_MAX == 1))
 		return (buff_fillc(env, arg));
 	else
 	{
@@ -70,7 +72,7 @@ int				buff_fillwchar(t_env *env, t_arg *arg)
 			return (-1);
 		if (arg->width > size && !(arg->flags & 32))
 			buff_fillwithnumber(env, ' ', arg->width - size);
-		buff_putwchar(env, ARG.wi);
+		buff_putwchar(env, arg->argument.wi);
 		if (arg->width > size && (arg->flags & 32))
 			buff_fillwithnumber(env, ' ', arg->width - size);
 		return (0);
@@ -89,7 +91,7 @@ int				buff_putwchar(t_env *env, wint_t unicode)
 	{
 		buf[octset - 1] = ((value & 0x3F) | 0x80);
 		octset--;
-		value = (value >> 6); 
+		value = (value >> 6);
 	}
 	octset = octsize(unicode);
 	buf[0] = value;
@@ -99,5 +101,3 @@ int				buff_putwchar(t_env *env, wint_t unicode)
 		buff_fillwith(env, buf[octset]);
 	return (1);
 }
-
-
