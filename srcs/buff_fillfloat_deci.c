@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 02:23:40 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/07 03:38:24 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int				float_rounding(t_bigint *number, int *prec)
 	return (1);
 }
 
-int				buff_fillfloatdeci(t_splitd *num, t_bigint *number, t_env *env,
+int				buff_fillfloatdeci(t_splitd *num, t_bigint *number, t_penv *env,
 		t_arg *arg)
 {
 	fill_bigint(number, num);

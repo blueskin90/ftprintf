@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 02:44:20 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/07 02:57:47 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int					initlongdouble(t_splitd *num, long double val)
 	return (1);
 }
 
-int					splitinit(t_arg *arg, t_splitd *num, t_env *env)
+int					splitinit(t_arg *arg, t_splitd *num, t_penv *env)
 {
 	if (!(arg->length == 8))
 		initdouble(num, arg->argument.d);

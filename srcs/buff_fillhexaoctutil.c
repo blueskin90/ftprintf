@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 14:08:58 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 14:11:42 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int			buff_uimaxtoahexa(t_env *env, uintmax_t value)
+int			buff_uimaxtoahexa(t_penv *env, uintmax_t value)
 {
 	uintmax_t		val;
 
@@ -27,7 +27,7 @@ int			buff_uimaxtoahexa(t_env *env, uintmax_t value)
 	return (1);
 }
 
-int			buff_uimaxtoaoct(t_env *env, uintmax_t value)
+int			buff_uimaxtoaoct(t_penv *env, uintmax_t value)
 {
 	if (value / 8)
 	{

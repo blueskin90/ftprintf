@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/10 14:52:38 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/07 02:50:15 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int						buff_fillexponenthexa(t_env *env, int up, int exp)
+int						buff_fillexponenthexa(t_penv *env, int up, int exp)
 {
 	buff_fillwith(env, ((up) ? 'P' : 'p'));
 	buff_fillwith(env, ((exp >= 0) ? '+' : '-'));
@@ -20,7 +20,7 @@ int						buff_fillexponenthexa(t_env *env, int up, int exp)
 	return (1);
 }
 
-int						buff_fillhexalongd(t_splitd *num, t_env *env,
+int						buff_fillhexalongd(t_splitd *num, t_penv *env,
 		t_arg *arg)
 {
 	t_hexa				hex;
@@ -48,7 +48,7 @@ int						buff_fillhexalongd(t_splitd *num, t_env *env,
 	return (1);
 }
 
-int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
+int						buff_fillhexad(t_splitd *num, t_penv *env, t_arg *arg)
 {
 	t_hexa				hex;
 	char				value[16];
@@ -75,7 +75,7 @@ int						buff_fillhexad(t_splitd *num, t_env *env, t_arg *arg)
 	return (1);
 }
 
-int						buff_fillfloat(t_env *env, t_arg *arg)
+int						buff_fillfloat(t_penv *env, t_arg *arg)
 {
 	static t_splitd		num;
 	static t_bigint		number;

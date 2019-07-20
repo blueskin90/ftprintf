@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/17 06:15:36 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 14:34:55 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int				sizeofexponent(int exp)
 	return (len);
 }
 
-int				putexponent(int exp, int isuppercase, t_env *env)
+int				putexponent(int exp, int isuppercase, t_penv *env)
 {
 	buff_fillwith(env, ((isuppercase) ? 'E' : 'e'));
 	buff_fillwith(env, ((exp < 0) ? '-' : '+'));
@@ -59,7 +59,7 @@ int				exp_setting(t_bigint *number)
 	return (1);
 }
 
-int				buff_fillexp(t_splitd *num, t_bigint *number, t_env *env,
+int				buff_fillexp(t_splitd *num, t_bigint *number, t_penv *env,
 		t_arg *arg)
 {
 	if (num->iszero)

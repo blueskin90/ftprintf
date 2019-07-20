@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:38:57 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/01 04:41:09 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:11 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				buff_padding(t_env *env, t_arg *arg, int width)
+int				buff_padding(t_penv *env, t_arg *arg, int width)
 {
 	int			i;
 
@@ -22,7 +22,7 @@ int				buff_padding(t_env *env, t_arg *arg, int width)
 	return (1);
 }
 
-int				buff_fillwith(t_env *env, char c)
+int				buff_fillwith(t_penv *env, char c)
 {
 	env->buff[env->buffi] = c;
 	env->buffi++;
@@ -30,7 +30,7 @@ int				buff_fillwith(t_env *env, char c)
 	return (1);
 }
 
-int				buff_fillwithnumber(t_env *env, char c, int i)
+int				buff_fillwithnumber(t_penv *env, char c, int i)
 {
 	while (i > 0)
 	{
@@ -40,7 +40,7 @@ int				buff_fillwithnumber(t_env *env, char c, int i)
 	return (1);
 }
 
-int				buff_fillwithstr(t_env *env, char *str)
+int				buff_fillwithstr(t_penv *env, char *str)
 {
 	while (*str)
 	{

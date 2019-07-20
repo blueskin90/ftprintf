@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 21:51:27 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 21:51:46 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:49 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				parse_psize(t_env *env, t_arg *arg)
+int				parse_psize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 9;

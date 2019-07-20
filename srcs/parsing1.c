@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 16:48:59 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:50:51 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:32:55 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				parse_error(t_env *env, t_arg *arg)
+int				parse_error(t_penv *env, t_arg *arg)
 {
 	if (*env->str)
 	{
@@ -26,7 +26,7 @@ int				parse_error(t_env *env, t_arg *arg)
 	return (0);
 }
 
-int				parse_preci(t_env *env, t_arg *arg)
+int				parse_preci(t_penv *env, t_arg *arg)
 {
 	env->str++;
 	if (*env->str == '*')
@@ -45,7 +45,7 @@ int				parse_preci(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int				parse_wildchar(t_env *env, t_arg *arg)
+int				parse_wildchar(t_penv *env, t_arg *arg)
 {
 	int			value;
 
@@ -68,7 +68,7 @@ int				parse_wildchar(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int				parse_number(t_env *env, t_arg *arg)
+int				parse_number(t_penv *env, t_arg *arg)
 {
 	int			value;
 

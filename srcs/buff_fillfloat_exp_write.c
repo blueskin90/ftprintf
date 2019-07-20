@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 14:30:43 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 14:35:12 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int				charnumberset(t_bigint *number, t_arg *arg, t_splitd *num,
 	return (1);
 }
 
-int				fucklanorme(t_bigint *number, t_env *env, t_arg *arg)
+int				fucklanorme(t_bigint *number, t_penv *env, t_arg *arg)
 {
 	int			i;
 
@@ -48,7 +48,7 @@ int				fucklanorme(t_bigint *number, t_env *env, t_arg *arg)
 }
 
 int				float_writeexpoutput(t_bigint *number, t_splitd *num,
-		t_env *env, t_arg *arg)
+		t_penv *env, t_arg *arg)
 {
 	int			charnumber;
 	int			padding;

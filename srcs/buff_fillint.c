@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 16:14:26 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:29:53 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int			buff_putsign(t_env *env, intmax_t value, int plus, int space)
+int			buff_putsign(t_penv *env, intmax_t value, int plus, int space)
 {
 	if (value < 0)
 		buff_fillwith(env, '-');
@@ -31,7 +31,7 @@ int			buff_fillint_init(t_arg *arg, intmax_t *value, int *length)
 	return (1);
 }
 
-int			buff_fillint(t_env *env, t_arg *arg)
+int			buff_fillint(t_penv *env, t_arg *arg)
 {
 	intmax_t	value;
 	int			length;
@@ -59,7 +59,7 @@ int			buff_fillint(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int			buff_filluint(t_env *env, t_arg *arg)
+int			buff_filluint(t_penv *env, t_arg *arg)
 {
 	uintmax_t	value;
 	int			length;

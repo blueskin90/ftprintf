@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 17:59:32 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 21:58:39 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:17 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-void							env_getarrayinittab(t_env *env)
+void							env_getarrayinittab(t_penv *env)
 {
 	env->get_arg[0][0] = &get_int;
 	env->get_arg[0][1] = &get_char;
@@ -39,7 +39,7 @@ void							env_getarrayinittab(t_env *env)
 	env->get_arg[4][9] = &get_ldouble;
 }
 
-void							env_getarrayinit(t_env *env)
+void							env_getarrayinit(t_penv *env)
 {
 	int							i;
 	int							j;
@@ -54,7 +54,7 @@ void							env_getarrayinit(t_env *env)
 	env_getarrayinittab(env);
 }
 
-void							env_ptrarrayinit0(t_env *env)
+void							env_ptrarrayinit0(t_penv *env)
 {
 	env->parse[106] = &parse_jconv;
 	env->parse[122] = &parse_zconv;
@@ -80,7 +80,7 @@ void							env_ptrarrayinit0(t_env *env)
 	env->parse[112] = &parse_psize;
 }
 
-void							env_ptrarrayinit1(t_env *env)
+void							env_ptrarrayinit1(t_penv *env)
 {
 	env->parse[101] = &parse_esize;
 	env->parse[69] = &parse_esize;
@@ -94,7 +94,7 @@ void							env_ptrarrayinit1(t_env *env)
 	env->parse[66] = &parse_bsize;
 }
 
-void							env_ptrarrayinit(t_env *env)
+void							env_ptrarrayinit(t_penv *env)
 {
 	int							i;
 

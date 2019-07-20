@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 15:32:16 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 21:54:55 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:40:13 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-void							env_init(t_env *env, const char *str)
+void							env_pinit(t_penv *env, const char *str)
 {
 	env->str = str;
 	env->strcopy = str;
@@ -31,16 +31,50 @@ void							env_init(t_env *env, const char *str)
 	env->null[6] = '\0';
 }
 
+int								ft_dprintf(int fd, const char *str, ...)
+{
+	t_penv						env;
+
+	if (str == NULL)
+		return (-1);
+	env_pinit(&env, str);
+	env.is_whatprintf = 2;
+	env.fd = fd;
+	va_start(env.arg, str);
+	if (parse_string(&env) == -1)
+		buff_flush(&env);
+	else
+		buff_flush(&env);
+	return (env.printflen);
+}
+
+char							*ft_sprintf(const char *str, ...)
+{
+	t_penv						env;
+
+	if (str == NULL)
+		return (NULL);
+	env_pinit(&env, str);
+	env.is_whatprintf = 1;
+	va_start(env.arg, str);
+	if (parse_string(&env) == -1)
+		buff_flush(&env);
+	else
+		buff_flush(&env);
+	return (env.printfstr);
+}
+
 int								ft_printf(const char *str, ...)
 {
-	t_env						env;
+	t_penv						env;
 
 	if (str == NULL)
 	{
 		write(1, "Gare au segfault !\n", 35);
 		return (-1);
 	}
-	env_init(&env, str);
+	env_pinit(&env, str);
+	env.is_whatprintf = 0;
 	va_start(env.arg, str);
 	if (parse_string(&env) == -1)
 	{

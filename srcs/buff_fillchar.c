@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:39:43 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 22:00:48 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int				octsize(wchar_t nbr)
 	return (0);
 }
 
-int				buff_fillchar(t_env *env, t_arg *arg)
+int				buff_fillchar(t_penv *env, t_arg *arg)
 {
 	if (arg->length == 3)
 		return (buff_fillwchar(env, arg));
@@ -40,7 +40,7 @@ int				buff_fillchar(t_env *env, t_arg *arg)
 		return (buff_fillc(env, arg));
 }
 
-int				buff_fillc(t_env *env, t_arg *arg)
+int				buff_fillc(t_penv *env, t_arg *arg)
 {
 	if (arg->width > 1 && !(arg->flags & 32))
 		buff_padding(env, arg, arg->width - 1);
@@ -53,7 +53,7 @@ int				buff_fillc(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int				buff_fillwchar(t_env *env, t_arg *arg)
+int				buff_fillwchar(t_penv *env, t_arg *arg)
 {
 	wint_t		value;
 	int			size;
@@ -79,7 +79,7 @@ int				buff_fillwchar(t_env *env, t_arg *arg)
 	}
 }
 
-int				buff_putwchar(t_env *env, wint_t unicode)
+int				buff_putwchar(t_penv *env, wint_t unicode)
 {
 	char		buf[4];
 	int			octset;

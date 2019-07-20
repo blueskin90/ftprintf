@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 21:49:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 21:50:00 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:41 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				parse_csize(t_env *env, t_arg *arg)
+int				parse_csize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 2;
 	arg->type = 6;
@@ -25,7 +25,7 @@ int				parse_csize(t_env *env, t_arg *arg)
 	return (0);
 }
 
-int				parse_bigcsize(t_env *env, t_arg *arg)
+int				parse_bigcsize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 2;
 	arg->type = 6;
@@ -40,7 +40,7 @@ int				parse_bigcsize(t_env *env, t_arg *arg)
 	return (0);
 }
 
-int				parse_ssize(t_env *env, t_arg *arg)
+int				parse_ssize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 7;
@@ -57,7 +57,7 @@ int				parse_ssize(t_env *env, t_arg *arg)
 	return (0);
 }
 
-int				parse_bigssize(t_env *env, t_arg *arg)
+int				parse_bigssize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 7;
@@ -76,7 +76,7 @@ int				parse_bigssize(t_env *env, t_arg *arg)
 	return (0);
 }
 
-int				parse_nsize(t_env *env, t_arg *arg)
+int				parse_nsize(t_penv *env, t_arg *arg)
 {
 	arg->cat = 3;
 	arg->type = 8;

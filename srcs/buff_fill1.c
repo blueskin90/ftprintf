@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 03:27:05 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:18:24 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int			buff_fills(t_env *env, t_arg *arg)
+int			buff_fills(t_penv *env, t_arg *arg)
 {
 	int		i;
 
@@ -33,14 +33,14 @@ int			buff_fills(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int			buff_fillwstrnull(t_env *env, t_arg *arg)
+int			buff_fillwstrnull(t_penv *env, t_arg *arg)
 {
 	arg->argument.cptr = NULL;
 	arg->length = 0;
 	return (buff_fills(env, arg));
 }
 
-int			buff_fillwstr(t_env *env, t_arg *arg)
+int			buff_fillwstr(t_penv *env, t_arg *arg)
 {
 	size_t	i;
 	size_t	charnbr;

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 02:46:59 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/07 02:47:58 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int						writehexasetvalues(t_splitd *num, t_arg *arg,
 	return (1);
 }
 
-int						writehexa_filldeci(t_splitd *num, t_env *env,
+int						writehexa_filldeci(t_splitd *num, t_penv *env,
 						char value[], int *i)
 {
 	*i = (num->isrounded) ? -1 : 0;
@@ -32,7 +32,7 @@ int						writehexa_filldeci(t_splitd *num, t_env *env,
 	return (1);
 }
 
-int						writehexa(t_splitd *num, t_env *env, char value[],
+int						writehexa(t_splitd *num, t_penv *env, char value[],
 		t_arg *arg)
 {
 	int					length;

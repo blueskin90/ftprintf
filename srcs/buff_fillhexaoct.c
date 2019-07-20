@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 23:45:26 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 14:10:07 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int			buff_putprefix(t_env *env, char c, int ishash)
+int			buff_putprefix(t_penv *env, char c, int ishash)
 {
 	if (!ishash)
 		return (1);
@@ -25,7 +25,7 @@ int			buff_putprefix(t_env *env, char c, int ishash)
 	return (1);
 }
 
-int			buff_filloct(t_env *env, t_arg *arg)
+int			buff_filloct(t_penv *env, t_arg *arg)
 {
 	uintmax_t	value;
 	int			length;
@@ -62,7 +62,7 @@ int			valueset(t_arg *arg, uintmax_t *value, int *length,
 	return (1);
 }
 
-int			buff_fillhexa(t_env *env, t_arg *arg)
+int			buff_fillhexa(t_penv *env, t_arg *arg)
 {
 	uintmax_t	value;
 	int			length;

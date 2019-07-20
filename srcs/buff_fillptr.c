@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 16:13:32 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:44:26 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int			buff_fillptrinit(t_arg *arg, uintmax_t *value, int *length)
 	return (1);
 }
 
-int			buff_fillptr(t_env *env, t_arg *arg)
+int			buff_fillptr(t_penv *env, t_arg *arg)
 {
 	uintmax_t	value;
 	int			length;
@@ -49,8 +49,10 @@ int			buff_fillptr(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int			buff_fillnptr(t_env *env, t_arg *arg)
+int			buff_fillnptr(t_penv *env, t_arg *arg)
 {
+	if (arg->argument.iptr == NULL)
+		return (0);
 	*(arg->argument.iptr) = env->printflen + env->buffi;
 	return (1);
 }

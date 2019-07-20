@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 15:34:54 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 15:36:45 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				putfloatsign(int sign, char flags, t_env *env)
+int				putfloatsign(int sign, char flags, t_penv *env)
 {
 	if (sign)
 		buff_fillwith(env, '-');
@@ -23,7 +23,7 @@ int				putfloatsign(int sign, char flags, t_env *env)
 	return (1);
 }
 
-int				float_writeoutput2(t_bigint *number, t_arg *arg, t_env *env)
+int				float_writeoutput2(t_bigint *number, t_arg *arg, t_penv *env)
 {
 	int			i;
 
@@ -49,7 +49,7 @@ int				float_writeoutput2(t_bigint *number, t_arg *arg, t_env *env)
 	return (1);
 }
 
-int				float_writeoutput(t_bigint *number, t_splitd *num, t_env *env,
+int				float_writeoutput(t_bigint *number, t_splitd *num, t_penv *env,
 		t_arg *arg)
 {
 	int			charnumber;

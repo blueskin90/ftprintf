@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 20:36:33 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:45:39 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int				parse_lmajconv(t_env *env, t_arg *arg)
+int				parse_lmajconv(t_penv *env, t_arg *arg)
 {
 	env->str++;
 	if (*env->str == 'L')

@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 20:26:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:50:31 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:50 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int					parse_string(t_env *env)
+int					parse_string(t_penv *env)
 {
 	int				retval;
 
@@ -39,7 +39,7 @@ int					parse_string(t_env *env)
 	return (1);
 }
 
-int					parse_token(t_env *env)
+int					parse_token(t_penv *env)
 {
 	t_arg			arg;
 	int				retval;
@@ -62,7 +62,7 @@ void				arg_init(t_arg *arg)
 	arg->argument.i = 0;
 }
 
-int					pfatoi(t_env *env)
+int					pfatoi(t_penv *env)
 {
 	long long int	result;
 

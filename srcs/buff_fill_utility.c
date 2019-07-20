@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 16:08:29 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:11:51 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/27 10:01:55 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@ size_t		ft_wstrlen(wint_t *str)
 	int		i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 		i++;
 	return (i);
 }
 
-size_t		ft_strlen(char *str)
+size_t		ft_pstrlen(char *str)
 {
 	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 		i++;
 	return (i);
 }
@@ -38,7 +38,7 @@ size_t		chartofill(t_arg *arg, int wchar)
 
 	if (!wchar)
 	{
-		strlen = ft_strlen(arg->argument.cptr);
+		strlen = ft_pstrlen(arg->argument.cptr);
 		if (arg->prec >= 0 && (size_t)arg->prec < strlen)
 			strlen = arg->prec;
 		if (arg->width >= 0 && (size_t)arg->width > strlen)
@@ -47,7 +47,7 @@ size_t		chartofill(t_arg *arg, int wchar)
 	return (0);
 }
 
-size_t		ft_wcharstrlen(t_env *env, t_arg *arg)
+size_t		ft_wcharstrlen(t_penv *env, t_arg *arg)
 {
 	size_t	i;
 	size_t	charnbr;

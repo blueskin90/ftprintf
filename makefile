@@ -6,13 +6,13 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2018/06/07 02:50:05 by toliver          ###   ########.fr        #
+#    Updated: 2019/01/07 16:27:39 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 
-FLAGS = -Werror -Wextra -Wall
+FLAGS = -Werror -Wextra -Wall -Ofast
 
 FILES = ft_printf \
 		parsing \
@@ -56,51 +56,41 @@ FILES = ft_printf \
 		buff_fillfloat_roundinghexa \
 		buff_fillfloat_writehexa \
 		buff_fillfloat_error \
-		buff_fillfloat_hexautil \
-#		buff_fillfloat_init \
-#		buff_fillfloat_split \
-#		buff_fillfloat_utility \
-#		buff_fillfloat_rounding \
+		buff_fillfloat_hexautil  
 
-SRC = $(addsuffix .c,  $(FILES))
+SRC = $(addsuffix .c, $(FILES))
 
-SRC_PATH = srcs/
+SRC_PATH = ./srcs/
 
 SRCS = $(addprefix $(SRC_PATH),$(SRC))
 
-OBJ_PATH = objs/
+OBJ_PATH = ./
 
 OBJS = $(addprefix $(OBJ_PATH),$(SRC:.c=.o))
 
-INCLUDES = -I./includes
+INCLUDES = -I./includes/
 
 HEADERS = includes/libftprintf.h \
-
 
 .PHONY: all clean fclean re test
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADERS)
-	ar rcs $(NAME) $(OBJS)
+	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-16s\033[32m[✔]\033[0m\n"
+	@ar rcs $(NAME) $(OBJS)
 
-objs/%.o: srcs/%.c $(HEADERS)
-	gcc -o $@ -c $< $(FLAGS) $(INCLUDES)
+%.o: srcs/%.c $(HEADERS)
+	@printf  "\033[1:92mCompiling $(NAME)\033[0m %-31s\033[32m[$<]\033[0m\n" ""
+	@gcc -o $@ -c $< $(FLAGS) $(INCLUDES)
+	@printf "\033[A\033[2K"
 
 clean:
-	rm -rf $(OBJS)
+	@rm -rf $(OBJS)
+	@printf  "\033[1:32mCleaning object files -> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-16s\033[32m[✔]\033[0m\n"
 
 fclean: clean
-	rm -rf $(NAME)
-
-test : $(NAME)
-	gcc main.c -o test.out $(FLAGS) $(NAME) $(INCLUDES)
-
-testnof : $(NAME)
-	gcc main.c -o test.out $(NAME) $(INCLUDES)
-
-cur : $(NAME)
-	cp libftprintf.a ../../curqui_test
-	make -C ../../curqui_test
+	@rm -rf $(NAME)
+	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-16s\033[32m[✔]\033[0m\n"
 
 re: fclean all

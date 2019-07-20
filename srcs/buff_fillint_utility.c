@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 16:12:27 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 16:13:16 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ size_t		ft_intmaxtlenbase(intmax_t value, int base)
 		return (ft_uintmaxtlenbase((uintmax_t)value, base));
 }
 
-int			buff_uimaxtoa(t_env *env, uintmax_t value)
+int			buff_uimaxtoa(t_penv *env, uintmax_t value)
 {
 	if (value >= 10)
 	{
@@ -45,7 +45,7 @@ int			buff_uimaxtoa(t_env *env, uintmax_t value)
 	return (1);
 }
 
-int			buff_imaxtoa(t_env *env, intmax_t value)
+int			buff_imaxtoa(t_penv *env, intmax_t value)
 {
 	if (value < 0)
 		return (buff_uimaxtoa(env, -value));

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 02:48:20 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/07 02:48:52 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int						buff_fillerror2(t_arg *arg, int i, char buffer[])
 	return (1);
 }
 
-int						buff_fillerror(t_splitd *num, t_env *env, t_arg *arg)
+int						buff_fillerror(t_splitd *num, t_penv *env, t_arg *arg)
 {
 	char				buffer[5];
 	int					i;

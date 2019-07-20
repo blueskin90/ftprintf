@@ -6,13 +6,13 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 06:32:28 by toliver           #+#    #+#             */
-/*   Updated: 2018/06/06 13:56:11 by toliver          ###   ########.fr       */
+/*   Updated: 2018/12/23 19:34:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-int					buff_printdouble(t_env *env, t_arg *arg)
+int					buff_printdouble(t_penv *env, t_arg *arg)
 {
 	t_double		value;
 	int				i;
@@ -32,7 +32,7 @@ int					buff_printdouble(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int					buff_printldouble(t_env *env, t_arg *arg)
+int					buff_printldouble(t_penv *env, t_arg *arg)
 {
 	t_ldouble		value;
 	int				i;
@@ -55,7 +55,7 @@ int					buff_printldouble(t_env *env, t_arg *arg)
 	return (1);
 }
 
-int					buff_printbits(t_env *env, t_arg *arg, int length)
+int					buff_printbits(t_penv *env, t_arg *arg, int length)
 {
 	int				i;
 
@@ -105,7 +105,7 @@ int					get_bitlen(t_arg *arg)
 	return (i);
 }
 
-int					buff_fillbinary(t_env *env, t_arg *arg)
+int					buff_fillbinary(t_penv *env, t_arg *arg)
 {
 	int				length;
 	int				numberofzeroes;
